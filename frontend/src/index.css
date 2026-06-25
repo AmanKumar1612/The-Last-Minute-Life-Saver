@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+@layer base {
+  /* ─── Custom Properties ─────────────────────────── */
+  :root {
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+
+  /* ─── Global Styles ─────────────────────────────── */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0f0f23;
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    margin: 0;
+  }
+
+  /* ─── Animated Background ───────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(102, 126, 234, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 40% 80%, rgba(79, 172, 254, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+  }
+
+  /* ─── Scrollbar ─────────────────────────────────── */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.4);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.6);
+  }
+}
+
+@layer components {
+  /* ─── Glassmorphism Utilities ───────────────────── */
+  .glass {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-light {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-card {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-card:hover {
+    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 40px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .glass-card {
+      border-radius: 12px;
+    }
+  }
+
+  /* ─── Gradient Buttons ──────────────────────────── */
+  .btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ─── Input Styles ──────────────────────────────── */
+  .input-glass {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    outline: none;
+    min-width: 0;
+  }
+
+  .input-glass:focus {
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .input-glass::placeholder {
+    color: rgba(148, 163, 184, 0.6);
+  }
+
+  /* Select elements */
+  select.input-glass {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  select.input-glass option {
+    background: #1e293b;
+    color: #e2e8f0;
+  }
+
+  /* Textarea */
+  textarea.input-glass {
+    width: 100%;
+    resize: none;
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  /* ─── Gradient Texts ────────────────────────────── */
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-secondary {
+    background: var(--gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ─── Priority Badge Colors ─────────────────────── */
+  .priority-critical { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 2px 8px; border-radius: 9999px; font-size: 10px; font-weight: 700; }
+  .priority-high { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 2px 8px; border-radius: 9999px; font-size: 10px; font-weight: 700; }
+  .priority-medium { background: linear-gradient(135deg, #eab308, #ca8a04); color: #1a1a2e; padding: 2px 8px; border-radius: 9999px; font-size: 10px; font-weight: 700; }
+  .priority-low { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 2px 8px; border-radius: 9999px; font-size: 10px; font-weight: 700; }
+
+  /* ─── Risk Level Colors ─────────────────────────── */
+  .risk-safe { color: #22c55e; }
+  .risk-warning { color: #eab308; }
+  .risk-high { color: #ef4444; }
+
+  /* ─── Animations ────────────────────────────────── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.4); }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease forwards;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite;
+  }
+}
