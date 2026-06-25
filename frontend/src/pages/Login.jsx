@@ -26,16 +26,17 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
       {/* Decorative orbs */}
-      <div className="absolute top-20 left-20 w-72 h-72 bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-10 left-10 w-72 h-72 bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none animate-orb" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/15 rounded-full blur-[120px] pointer-events-none animate-orb stagger-3" />
+      <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-pink-500/10 rounded-full blur-[90px] pointer-events-none animate-orb stagger-5" />
 
-      <div className="glass-card p-8 w-full max-w-[420px] animate-fade-in-up">
+      <div className="glass-card p-8 w-full max-w-[420px] animate-fade-in-up border border-white/10 hover:shadow-indigo-500/20 hover:shadow-2xl">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30">
-            <Zap className="w-8 h-8 text-white" />
+        <div className="flex flex-col items-center mb-8 opacity-0-start animate-fade-in-up stagger-1">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30 animate-float hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer group">
+            <Zap className="w-8 h-8 text-white animate-lightning group-hover:rotate-12 transition-transform" />
           </div>
           <h1 className="text-2xl font-bold gradient-text">Welcome Back</h1>
           <p className="text-slate-400 text-sm mt-1">Sign in to your productivity companion</p>
@@ -43,37 +44,37 @@ export default function Login() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4 text-red-400 text-sm text-center">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4 text-red-400 text-sm text-center animate-pulse-glow">
             {error}
           </div>
         )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
+          <div className="opacity-0-start animate-fade-in-up stagger-2">
             <label className="text-sm text-slate-300 mb-1.5 block font-medium">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <div className="relative group">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none group-focus-within:text-indigo-400 group-focus-within:scale-110 transition-all duration-200" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input-glass w-full pl-10"
+                className="input-glass w-full pl-10 hover:border-white/20 focus:border-indigo-500/50 transition-all duration-200"
                 placeholder="you@example.com"
                 required
               />
             </div>
           </div>
 
-          <div>
+          <div className="opacity-0-start animate-fade-in-up stagger-3">
             <label className="text-sm text-slate-300 mb-1.5 block font-medium">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <div className="relative group">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none group-focus-within:text-indigo-400 group-focus-within:scale-110 transition-all duration-200" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input-glass w-full pl-10"
+                className="input-glass w-full pl-10 hover:border-white/20 focus:border-indigo-500/50 transition-all duration-200"
                 placeholder="••••••••"
                 required
               />
@@ -83,16 +84,16 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full py-3 gap-2 text-sm"
+            className="btn-primary w-full py-3 gap-2 text-sm opacity-0-start animate-fade-in-up stagger-4 hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 cursor-pointer"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <p className="text-center text-sm text-slate-400 mt-6">
+        <p className="text-center text-sm text-slate-400 mt-6 opacity-0-start animate-fade-in-up stagger-5">
           Don't have an account?{' '}
-          <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+          <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors hover:underline">
             Sign up
           </Link>
         </p>
