@@ -3,6 +3,8 @@ import client from '../api/client';
 import { Plus, Trash2, CheckCircle, Clock, AlertTriangle, ChevronDown, Sparkles, X, Loader2 } from 'lucide-react';
 import { formatTimeRemaining, capitalizeFirst } from '../utils/helpers';
 import { CATEGORIES, IMPORTANCE_LEVELS } from '../utils/constants';
+import { motion, AnimatePresence } from 'framer-motion';
+import { staggerContainer, fadeUp, hoverLift } from '../lib/motion';
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -57,63 +59,99 @@ export default function Tasks() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <motion.div 
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Tasks</h1>
           <p className="text-sm text-slate-400">{tasks.length} tasks total</p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
-          <button onClick={prioritizeAll} className="btn-secondary flex items-center gap-2 text-sm">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={prioritizeAll} 
+            className="btn-secondary flex items-center gap-2 text-sm"
+          >
             <Sparkles className="w-4 h-4 text-purple-400" /> AI Prioritize
-          </button>
-          <button onClick={() => setShowForm(true)} className="btn-primary flex items-center gap-2 text-sm">
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowForm(true)} 
+            className="btn-primary flex items-center gap-2 text-sm"
+          >
             <Plus className="w-4 h-4" /> New Task
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Filters */}
-      <div className="flex gap-3 flex-wrap">
-        <select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })} className="input-glass py-2 px-4 text-sm">
+      <motion.div variants={fadeUp} className="flex gap-3 flex-wrap">
+        <select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })} className="input-glass py-2 px-4 text-sm w-36">
           <option value="">All Status</option>
           <option value="pending">Pending</option>
           <option value="in_progress">In Progress</option>
           <option value="completed">Completed</option>
           <option value="overdue">Overdue</option>
         </select>
-        <select value={filter.category} onChange={(e) => setFilter({ ...filter, category: e.target.value })} className="input-glass py-2 px-4 text-sm">
+        <select value={filter.category} onChange={(e) => setFilter({ ...filter, category: e.target.value })} className="input-glass py-2 px-4 text-sm w-36">
           <option value="">All Categories</option>
           {CATEGORIES.map(c => <option key={c} value={c}>{capitalizeFirst(c)}</option>)}
         </select>
-      </div>
+      </motion.div>
 
       {/* Task List */}
       {loading ? (
-        <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" /></div>
+        <div className="flex justify-center py-20">
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full" 
+          />
+        </div>
       ) : tasks.length === 0 ? (
-        <div className="glass-card p-12 text-center">
+        <motion.div variants={fadeUp} className="glass-card p-12 text-center">
           <p className="text-slate-400">No tasks yet. Create your first task!</p>
-        </div>
+        </motion.div>
       ) : (
-        <div className="space-y-3">
-          {tasks.map(task => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onDelete={() => deleteTask(task.id)}
-              onComplete={() => completeTask(task.id)}
-              onBreakdown={() => breakdownTask(task.id)}
-              breakdownLoading={breakdownLoading[task.id]}
-            />
-          ))}
-        </div>
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+          className="space-y-3"
+        >
+          <AnimatePresence mode="popLayout">
+            {tasks.map(task => (
+              <motion.div
+                layout
+                key={task.id}
+                variants={fadeUp}
+                exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.2 } }}
+              >
+                <TaskCard
+                  task={task}
+                  onDelete={() => deleteTask(task.id)}
+                  onComplete={() => completeTask(task.id)}
+                  onBreakdown={() => breakdownTask(task.id)}
+                  breakdownLoading={breakdownLoading[task.id]}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
 
       {/* Create Modal */}
-      {showForm && <TaskFormModal onClose={() => setShowForm(false)} onSubmit={createTask} />}
-    </div>
+      <AnimatePresence>
+        {showForm && <TaskFormModal onClose={() => setShowForm(false)} onSubmit={createTask} />}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -122,12 +160,22 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
   const isCompleted = task.status === 'completed';
 
   return (
-    <div className={`glass-card p-4 ${isCompleted ? 'opacity-60' : ''}`}>
+    <motion.div 
+      layout
+      whileHover={{ scale: 1.01, backgroundColor: 'rgba(255,255,255,0.03)' }}
+      className={`glass-card p-4 transition-all duration-300 ${isCompleted ? 'opacity-60' : ''}`}
+    >
       <div className="flex items-start gap-3">
         {/* Complete checkbox */}
-        <button onClick={onComplete} disabled={isCompleted} className={`mt-0.5 flex-shrink-0 ${isCompleted ? 'text-green-500' : 'text-slate-500 hover:text-green-400'} transition-colors`}>
+        <motion.button 
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.8 }}
+          onClick={onComplete} 
+          disabled={isCompleted} 
+          className={`mt-0.5 flex-shrink-0 cursor-pointer ${isCompleted ? 'text-green-500' : 'text-slate-500 hover:text-green-400'} transition-colors`}
+        >
           <CheckCircle className="w-5 h-5" />
-        </button>
+        </motion.button>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -160,21 +208,34 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
           {/* Subtasks */}
           {task.subtasks?.length > 0 && (
             <div className="mt-3">
-              <button onClick={() => setExpanded(!expanded)} className="text-xs text-indigo-400 flex items-center gap-1 hover:text-indigo-300 transition-colors">
-                <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+              <motion.button 
+                whileHover={{ x: 2 }}
+                onClick={() => setExpanded(!expanded)} 
+                className="text-xs text-indigo-400 flex items-center gap-1 hover:text-indigo-300 transition-colors cursor-pointer"
+              >
+                <motion.div animate={{ rotate: expanded ? 180 : 0 }}>
+                  <ChevronDown className="w-3 h-3" />
+                </motion.div>
                 {task.subtasks.length} subtasks
-              </button>
-              {expanded && (
-                <div className="mt-2 space-y-1.5 pl-2 border-l border-white/5">
-                  {task.subtasks.map((st, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs">
-                      <div className={`w-3 h-3 rounded-full border flex-shrink-0 ${st.completed ? 'bg-green-500 border-green-500' : 'border-slate-500'}`} />
-                      <span className={`min-w-0 ${st.completed ? 'text-slate-400 line-through' : 'text-slate-300'}`}>{st.title}</span>
-                      {st.estimated_hours && <span className="text-slate-500 ml-auto flex-shrink-0">{st.estimated_hours}h</span>}
-                    </div>
-                  ))}
-                </div>
-              )}
+              </motion.button>
+              <AnimatePresence>
+                {expanded && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="mt-2 space-y-1.5 pl-2 border-l border-white/5 overflow-hidden"
+                  >
+                    {task.subtasks.map((st, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs">
+                        <div className={`w-3 h-3 rounded-full border flex-shrink-0 ${st.completed ? 'bg-green-500 border-green-500' : 'border-slate-500'}`} />
+                        <span className={`min-w-0 ${st.completed ? 'text-slate-400 line-through' : 'text-slate-300'}`}>{st.title}</span>
+                        {st.estimated_hours && <span className="text-slate-500 ml-auto flex-shrink-0">{st.estimated_hours}h</span>}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )}
         </div>
@@ -182,16 +243,32 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
         {/* Actions */}
         <div className="flex items-center gap-1 flex-shrink-0">
           {!isCompleted && !task.subtasks?.length && (
-            <button onClick={onBreakdown} disabled={breakdownLoading} className="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition-all" title="AI Breakdown">
-              {breakdownLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            </button>
+            <motion.button 
+              whileHover={{ scale: 1.1, backgroundColor: 'rgba(99,102,241,0.1)' }}
+              whileTap={{ scale: 0.9 }}
+              onClick={onBreakdown} 
+              disabled={breakdownLoading} 
+              className="p-2 rounded-lg text-indigo-400 transition-all cursor-pointer" 
+              title="AI Breakdown"
+            >
+              {breakdownLoading ? (
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                  <Loader2 className="w-4 h-4" />
+                </motion.div>
+              ) : <Sparkles className="w-4 h-4" />}
+            </motion.button>
           )}
-          <button onClick={onDelete} className="p-2 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-all">
+          <motion.button 
+            whileHover={{ scale: 1.1, backgroundColor: 'rgba(239,68,68,0.1)' }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onDelete} 
+            className="p-2 rounded-lg text-slate-400 hover:text-red-400 transition-all cursor-pointer"
+          >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -211,11 +288,29 @@ function TaskFormModal({ onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="glass-card p-6 w-full max-w-lg animate-fade-in-up">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+    >
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        className="glass-card p-6 w-full max-w-lg border border-white/10 shadow-2xl shadow-black/50"
+      >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-white">Create New Task</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+          <motion.button 
+            whileHover={{ rotate: 90, scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onClose} 
+            className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </motion.button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -256,14 +351,32 @@ function TaskFormModal({ onClose, onSubmit }) {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1 py-3">Cancel</button>
-            <button type="submit" disabled={loading} className="btn-primary flex-1 py-3 gap-2">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="button" 
+              onClick={onClose} 
+              className="btn-secondary flex-1 py-3"
+            >
+              Cancel
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit" 
+              disabled={loading} 
+              className="btn-primary flex-1 py-3 gap-2"
+            >
+              {loading ? (
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                  <Loader2 className="w-4 h-4" />
+                </motion.div>
+              ) : <Plus className="w-4 h-4" />}
               {loading ? 'Creating...' : 'Create Task'}
-            </button>
+            </motion.button>
           </div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

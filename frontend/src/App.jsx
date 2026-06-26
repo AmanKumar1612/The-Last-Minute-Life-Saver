@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import DashboardLayout from './components/layout/DashboardLayout';
@@ -33,37 +34,46 @@ function PublicRoute({ children }) {
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
 }
 
+function AnimatedRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Public */}
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+
+        {/* Protected */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/goals" element={<Goals />} />
+          <Route path="/rescue" element={<RescueMode />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+
+        {/* Redirect / Public Marketing */}
+        <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <Routes>
-            {/* Public */}
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-
-            {/* Protected */}
-            <Route
-              element={
-                <ProtectedRoute>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/goals" element={<Goals />} />
-              <Route path="/rescue" element={<RescueMode />} />
-              <Route path="/settings" element={<Settings />} />
-            </Route>
-
-            {/* Redirect / Public Marketing */}
-            <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+          <AnimatedRoutes />
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
