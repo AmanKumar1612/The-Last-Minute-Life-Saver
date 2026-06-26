@@ -24,6 +24,12 @@ export default function CalendarPage() {
     setLoading(true);
     try {
       const res = await client.get(`/calendar/events?date=${selectedDate}`);
+      if (res.data.connected === false) {
+        setConnected(false);
+        setEvents([]);
+        setFreeSlots([]);
+        return;
+      }
       setEvents(res.data.events || []);
       setConnected(true);
       const slotsRes = await client.get(`/calendar/free-slots?date=${selectedDate}`);

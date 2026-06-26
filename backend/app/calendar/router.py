@@ -61,11 +61,11 @@ async def get_events(
 
     token_data = user.get("google_calendar_token") if user else None
     if not token_data:
-        raise HTTPException(status_code=400, detail="Google Calendar not connected. Please connect first.")
+        return {"events": [], "connected": False}
 
     try:
         events = await google_cal.get_events(token_data, date)
-        return {"events": events}
+        return {"events": events, "connected": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch events: {str(e)}")
 
@@ -84,10 +84,10 @@ async def get_free_slots(
 
     token_data = user.get("google_calendar_token") if user else None
     if not token_data:
-        raise HTTPException(status_code=400, detail="Google Calendar not connected")
+        return {"free_slots": [], "connected": False}
 
     try:
         slots = await google_cal.get_free_slots(token_data, date, start_hour, end_hour)
-        return {"free_slots": slots}
+        return {"free_slots": slots, "connected": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to detect free slots: {str(e)}")

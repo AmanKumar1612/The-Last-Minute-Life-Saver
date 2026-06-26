@@ -11,6 +11,7 @@ import Analytics from './pages/Analytics';
 import Goals from './pages/Goals';
 import RescueMode from './pages/RescueMode';
 import Settings from './pages/Settings';
+import LandingPage from './pages/LandingPage';
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -59,8 +60,8 @@ export default function App() {
               <Route path="/settings" element={<Settings />} />
             </Route>
 
-            {/* Redirect */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Redirect / Public Marketing */}
+            <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </AuthProvider>
