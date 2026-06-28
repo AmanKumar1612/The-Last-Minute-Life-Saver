@@ -57,21 +57,35 @@ export default function Analytics() {
         <p className="text-sm text-[var(--text-muted)] mt-1">Your productivity insights</p>
       </motion.div>
 
-      {/* Overview Cards */}
-      <motion.div variants={fadeUp} className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <MiniStat icon={<TrendingUp />} label="Completion Rate" value={overview.completion_rate || 0} suffix="%" color="text-green-400" />
-        <MiniStat icon={<Clock />} label="Focus Hours" value={data.focus_hours?.this_week || 0} suffix="h" color="text-blue-400" />
-        <MiniStat icon={<AlertTriangle />} label="Missed Deadlines" value={data.missed_deadlines || 0} color="text-red-400" />
-        <MiniStat icon={<Flame />} label="Streak" value={overview.streak_days || 0} suffix=" days" color="text-orange-400" />
-        <MiniStat icon={<Target />} label="Total Tasks" value={overview.total_tasks || 0} color="text-blue-500" />
+      {/* Asymmetrical Stats Row */}
+      <motion.div variants={fadeUp} className="flex flex-col lg:flex-row gap-6">
+        {/* Hero Stat */}
+        <div className="lg:w-1/3 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-8 shadow-sm flex flex-col justify-center relative overflow-hidden group">
+          <div className="absolute right-0 bottom-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mb-10 transition-colors group-hover:bg-emerald-500/10 pointer-events-none" />
+          <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-4">Overall Completion</p>
+          <div className="flex items-end gap-3 relative z-10">
+            <p className="text-7xl font-light text-[var(--text-primary)] tracking-tighter">
+              <AnimatedNumber value={overview.completion_rate || 0} />%
+            </p>
+            <TrendingUp className="w-8 h-8 text-emerald-500 mb-2" />
+          </div>
+        </div>
+
+        {/* Secondary Stats Grid */}
+        <div className="lg:w-2/3 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <MiniStat icon={<Clock />} label="Focus Hours" value={data.focus_hours?.this_week || 0} suffix="h" color="text-blue-500" />
+          <MiniStat icon={<AlertTriangle />} label="Missed" value={data.missed_deadlines || 0} color="text-[var(--danger)]" />
+          <MiniStat icon={<Flame />} label="Day Streak" value={overview.streak_days || 0} color="text-orange-500" />
+          <MiniStat icon={<Target />} label="Total Tasks" value={overview.total_tasks || 0} color="text-[var(--accent-primary)]" />
+        </div>
       </motion.div>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Weekly Productivity */}
-        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
-            <BarChart3 className="w-[18px] h-[18px] text-[var(--accent-highlight)] flex-shrink-0" /> Weekly Productivity
+      {/* Primary Charts (70/30 Split) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Weekly Productivity (70%) */}
+        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
+          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6 flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-[var(--accent-highlight)]" /> Weekly Productivity
           </h2>
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={data.weekly_productivity || []}>
@@ -89,30 +103,35 @@ export default function Analytics() {
           </ResponsiveContainer>
         </motion.div>
 
-        {/* Completion Rate Pie */}
-        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5">Completion Breakdown</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie data={completionData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" animationDuration={1500}>
-                {completionData.map((_, i) => <Cell key={i} fill={['#10b981', '#2563eb', '#ef4444'][i]} />)}
-              </Pie>
-              <Tooltip contentStyle={{ background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }} />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="flex justify-center gap-6 mt-2">
+        {/* Completion Rate Pie (30%) */}
+        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-4 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex flex-col">
+          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6">Completion Breakdown</h2>
+          <div className="flex-1 min-h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={completionData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" animationDuration={1500}>
+                  {completionData.map((_, i) => <Cell key={i} fill={['#10b981', '#3b82f6', '#ef4444'][i]} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex justify-center gap-4 mt-4">
             {completionData.map((item, i) => (
-              <motion.div whileHover={{ scale: 1.05 }} key={i} className="flex items-center gap-2 text-[13px] cursor-pointer">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: ['#10b981', '#2563eb', '#ef4444'][i] }} />
-                <span className="text-[var(--text-muted)]">{item.name}: <span className="font-medium text-[var(--text-primary)]"><AnimatedNumber value={item.value} /></span></span>
+              <motion.div whileHover={{ scale: 1.05 }} key={i} className="flex flex-col items-center gap-1 text-[13px] cursor-pointer">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: ['#10b981', '#3b82f6', '#ef4444'][i] }} />
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">{item.name}</span>
               </motion.div>
             ))}
           </div>
         </motion.div>
+      </div>
 
-        {/* Category Distribution */}
-        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5">Tasks by Category</h2>
+      {/* Secondary Charts (30/70 Split) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Category Distribution (30%) */}
+        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-4 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
+          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6">Tasks by Category</h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={data.category_distribution || []} layout="vertical">
               <XAxis type="number" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -123,29 +142,29 @@ export default function Analytics() {
           </ResponsiveContainer>
         </motion.div>
 
-        {/* Goal Progress */}
-        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
-            <Target className="w-[18px] h-[18px] text-[var(--success)] flex-shrink-0" /> Goal Progress
+        {/* Goal Progress (70%) */}
+        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
+          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6 flex items-center gap-2">
+            <Target className="w-4 h-4 text-emerald-500" /> Active Goals
           </h2>
           {(data.goal_progress || []).length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 bg-[var(--surface-secondary)]/30 border border-dashed border-[var(--border-color)] rounded-xl text-center">
+            <div className="flex flex-col items-center justify-center h-[200px] bg-[var(--surface-secondary)]/30 border border-dashed border-[var(--border-color)] rounded-xl text-center">
               <p className="text-[13px] text-[var(--text-muted)]">No goals tracked yet</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[250px] overflow-y-auto pr-2 custom-scrollbar">
               {data.goal_progress.map(goal => (
-                <motion.div whileHover={{ scale: 1.02 }} key={goal.id} className="cursor-pointer">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-white truncate mr-2">{goal.title}</span>
-                    <span className="text-xs text-blue-400 font-medium"><AnimatedNumber value={goal.progress} />%</span>
+                <motion.div whileHover={{ scale: 1.02 }} key={goal.id} className="cursor-pointer bg-[var(--background)] border border-[var(--border-color)] p-4 rounded-xl flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[13px] font-medium text-[var(--text-primary)] truncate mr-2">{goal.title}</span>
+                    <span className="text-xs text-[var(--text-muted)] font-bold"><AnimatedNumber value={goal.progress} />%</span>
                   </div>
-                  <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-[var(--surface-secondary)] rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${goal.progress}%` }}
                       transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-blue-600 to-blue-600 rounded-full" 
+                      className="h-full bg-[var(--text-secondary)] rounded-full" 
                     />
                   </div>
                 </motion.div>

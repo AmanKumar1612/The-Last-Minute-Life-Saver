@@ -162,13 +162,20 @@ export default function Tasks() {
 function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading }) {
   const [expanded, setExpanded] = useState(false);
   const isCompleted = task.status === 'completed';
+  const isCritical = task.priority_label === 'Critical' && !isCompleted;
 
   return (
     <motion.div 
       layout
-      whileHover={{ scale: 1.01, backgroundColor: 'var(--surface-secondary)' }}
-      className={`bg-[var(--surface)] border border-[var(--border-color)] rounded-lg p-5 shadow-sm transition-all duration-300 ${isCompleted ? 'opacity-60' : ''}`}
+      whileHover={{ scale: 1.01, backgroundColor: isCritical ? 'rgba(239, 68, 68, 0.05)' : 'var(--surface-secondary)' }}
+      className={`rounded-xl transition-all duration-300 relative overflow-hidden group ${
+        isCompleted ? 'opacity-60 bg-[var(--surface)] border border-[var(--border-color)] p-4 shadow-sm' 
+        : isCritical ? 'bg-gradient-to-r from-red-500/10 to-[var(--surface)] border border-red-500/30 p-6 shadow-md'
+        : 'bg-[var(--surface)] border border-[var(--border-color)] p-4 shadow-sm'
+      }`}
     >
+      {isCritical && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+      
       <div className="flex items-start gap-4">
         {/* Complete checkbox */}
         <motion.button 
@@ -176,34 +183,38 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
           whileTap={{ scale: 0.8 }}
           onClick={onComplete} 
           disabled={isCompleted} 
-          className={`mt-0.5 flex-shrink-0 cursor-pointer ${isCompleted ? 'text-green-500' : 'text-slate-500 hover:text-green-400'} transition-colors`}
+          className={`mt-0.5 flex-shrink-0 cursor-pointer ${isCompleted ? 'text-emerald-500' : 'text-[var(--text-muted)] hover:text-emerald-400'} transition-colors`}
         >
-          <CheckCircle className="w-5 h-5" />
+          <CheckCircle className={isCritical ? "w-6 h-6" : "w-5 h-5"} />
         </motion.button>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            <h3 className={`text-[15px] font-medium tracking-tight ${isCompleted ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>{task.title}</h3>
+            <h3 className={`${isCritical ? 'text-lg font-semibold' : 'text-[15px] font-medium'} tracking-tight ${isCompleted ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
+              {task.title}
+            </h3>
             {task.priority_label && (
               <span className={`priority-${task.priority_label.toLowerCase()}`}>
                 {task.priority_label} {task.priority_score ? `(${task.priority_score})` : ''}
               </span>
             )}
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--surface-secondary)] text-[var(--text-muted)]">{capitalizeFirst(task.category)}</span>
+            <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-[var(--surface-secondary)] text-[var(--text-muted)]">
+              {capitalizeFirst(task.category)}
+            </span>
           </div>
 
-          {task.description && <p className="text-xs text-[var(--text-muted)] mt-1.5 line-clamp-2">{task.description}</p>}
+          {task.description && <p className={`${isCritical ? 'text-[13px]' : 'text-xs'} text-[var(--text-secondary)] mt-2 line-clamp-2`}>{task.description}</p>}
 
-          <div className="flex items-center gap-4 mt-2 text-xs text-[var(--text-muted)] flex-wrap">
+          <div className="flex items-center gap-4 mt-3 text-xs text-[var(--text-muted)] flex-wrap">
             {task.deadline && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5 font-medium">
                 <Clock className="w-3 h-3 flex-shrink-0" /> {formatTimeRemaining(task.deadline)}
               </span>
             )}
-            {task.estimated_hours && <span>{task.estimated_hours}h est.</span>}
+            {task.estimated_hours && <span className="font-medium">{task.estimated_hours}h est.</span>}
             {task.risk_percentage != null && (
-              <span className={`flex items-center gap-1 ${task.risk_percentage >= 70 ? 'text-red-400' : task.risk_percentage >= 40 ? 'text-yellow-400' : 'text-green-400'}`}>
+              <span className={`flex items-center gap-1.5 font-bold ${task.risk_percentage >= 70 ? 'text-[var(--danger)]' : task.risk_percentage >= 40 ? 'text-[var(--warning)]' : 'text-emerald-500'}`}>
                 <AlertTriangle className="w-3 h-3 flex-shrink-0" /> {task.risk_percentage}% risk
               </span>
             )}
@@ -211,11 +222,11 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
 
           {/* Subtasks */}
           {task.subtasks?.length > 0 && (
-            <div className="mt-3">
+            <div className="mt-4">
               <motion.button 
                 whileHover={{ x: 2 }}
                 onClick={() => setExpanded(!expanded)} 
-                className="text-xs text-blue-400 flex items-center gap-1 hover:text-blue-300 transition-colors cursor-pointer"
+                className="text-[11px] font-bold uppercase tracking-wider text-[var(--accent-primary)] flex items-center gap-1 hover:text-[var(--accent-highlight)] transition-colors cursor-pointer"
               >
                 <motion.div animate={{ rotate: expanded ? 180 : 0 }}>
                   <ChevronDown className="w-3 h-3" />
@@ -228,13 +239,13 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="mt-2 space-y-1.5 pl-2 border-l border-white/5 overflow-hidden"
+                    className="mt-3 space-y-2 pl-3 border-l-2 border-[var(--border-color)] overflow-hidden"
                   >
                     {task.subtasks.map((st, i) => (
-                      <div key={i} className="flex items-center gap-2 text-xs">
-                        <div className={`w-3 h-3 rounded-full border flex-shrink-0 ${st.completed ? 'bg-green-500 border-green-500' : 'border-slate-500'}`} />
-                        <span className={`min-w-0 ${st.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-primary)]'}`}>{st.title}</span>
-                        {st.estimated_hours && <span className="text-slate-500 ml-auto flex-shrink-0">{st.estimated_hours}h</span>}
+                      <div key={i} className="flex items-center gap-3 text-[13px]">
+                        <div className={`w-3 h-3 rounded-full border-2 flex-shrink-0 ${st.completed ? 'bg-emerald-500 border-emerald-500' : 'border-[var(--text-muted)]'}`} />
+                        <span className={`min-w-0 ${st.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-primary)] font-medium'}`}>{st.title}</span>
+                        {st.estimated_hours && <span className="text-[var(--text-muted)] ml-auto flex-shrink-0 font-bold">{st.estimated_hours}h</span>}
                       </div>
                     ))}
                   </motion.div>
@@ -252,7 +263,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
               whileTap={{ scale: 0.9 }}
               onClick={onBreakdown} 
               disabled={breakdownLoading} 
-              className="p-2 rounded-lg text-blue-400 transition-all cursor-pointer" 
+              className="p-2 rounded-lg text-[var(--accent-primary)] transition-all cursor-pointer" 
               title="AI Breakdown"
             >
               {breakdownLoading ? (
@@ -266,7 +277,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
             whileHover={{ scale: 1.1, backgroundColor: 'rgba(239,68,68,0.1)' }}
             whileTap={{ scale: 0.9 }}
             onClick={onDelete} 
-            className="p-2 rounded-lg text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+            className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--danger)] transition-all cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
           </motion.button>
@@ -303,58 +314,63 @@ function TaskFormModal({ onClose, onSubmit }) {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="bg-[var(--surface)] border border-[var(--border-color)] p-8 rounded-xl w-full max-w-lg shadow-2xl shadow-black/50"
+        className="bg-[var(--surface)] border border-[var(--border-color)] p-8 rounded-xl w-full max-w-3xl shadow-2xl shadow-black/50"
       >
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Create New Task</h2>
+          <h2 className="text-2xl font-light text-[var(--text-primary)] tracking-tight">Create New Task</h2>
           <motion.button 
             whileHover={{ rotate: 90, scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onClose} 
-            className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+            className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-8 h-8 flex items-center justify-center rounded-full bg-[var(--surface-secondary)]"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </motion.button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Title *</label>
-            <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input-glass w-full" placeholder="What needs to be done?" required />
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Left Column - Main Details */}
+            <div className="flex-1 space-y-6">
+              <div>
+                <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 block">Task Title *</label>
+                <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input-glass w-full text-lg py-3" placeholder="What needs to be done?" required />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 block">Description</label>
+                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-glass w-full min-h-[180px] resize-none" placeholder="Add context, details, or notes..." />
+              </div>
+            </div>
+
+            {/* Right Column - Metadata */}
+            <div className="w-full md:w-64 space-y-5">
+              <div className="p-5 rounded-xl bg-[var(--surface-secondary)]/30 border border-[var(--border-color)] space-y-5">
+                <div>
+                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-1.5"><Clock className="w-3 h-3"/> Deadline</label>
+                  <input type="datetime-local" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 block">Est. Hours</label>
+                  <input type="number" step="0.5" min="0" value={form.estimated_hours} onChange={(e) => setForm({ ...form, estimated_hours: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3" placeholder="e.g., 3" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3 h-3 text-[var(--warning)]"/> Importance</label>
+                  <select value={form.importance} onChange={(e) => setForm({ ...form, importance: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3">
+                    {IMPORTANCE_LEVELS.map(l => <option key={l} value={l}>{capitalizeFirst(l)}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 block">Category</label>
+                  <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3">
+                    {CATEGORIES.map(c => <option key={c} value={c}>{capitalizeFirst(c)}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Description</label>
-            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-glass w-full h-20" placeholder="Add details..." />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Deadline</label>
-              <input type="datetime-local" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} className="input-glass w-full" />
-            </div>
-            <div>
-              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Estimated Hours</label>
-              <input type="number" step="0.5" min="0" value={form.estimated_hours} onChange={(e) => setForm({ ...form, estimated_hours: e.target.value })} className="input-glass w-full" placeholder="e.g., 3" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Importance</label>
-              <select value={form.importance} onChange={(e) => setForm({ ...form, importance: e.target.value })} className="input-glass w-full">
-                {IMPORTANCE_LEVELS.map(l => <option key={l} value={l}>{capitalizeFirst(l)}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Category</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input-glass w-full">
-                {CATEGORIES.map(c => <option key={c} value={c}>{capitalizeFirst(c)}</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-4 pt-6 mt-6 border-t border-[var(--border-color)]">
             <motion.button 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -369,14 +385,14 @@ function TaskFormModal({ onClose, onSubmit }) {
               whileTap={{ scale: 0.98 }}
               type="submit" 
               disabled={loading} 
-              className="btn-primary flex-1 py-3 gap-2"
+              className="btn-primary flex-[2] py-3 gap-2"
             >
               {loading ? (
                 <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
                   <Loader2 className="w-4 h-4" />
                 </motion.div>
               ) : <Plus className="w-4 h-4" />}
-              {loading ? 'Creating...' : 'Create Task'}
+              {loading ? 'Creating Task...' : 'Create Task'}
             </motion.button>
           </div>
         </form>

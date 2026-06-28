@@ -84,21 +84,28 @@ export default function Goals() {
           <p className="text-[13px] text-[var(--text-muted)]">Set a new goal to start tracking progress.</p>
         </div>
       ) : (
-        <motion.div variants={staggerContainer} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div variants={staggerContainer} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-12 gap-6">
           <AnimatePresence mode="popLayout">
-            {goals.map(goal => (
+            {goals.map((goal, index) => (
               <motion.div 
                 layout
                 key={goal.id} 
                 variants={cardVariants} 
                 whileHover="hover"
                 exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm"
+                className={`bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex flex-col relative overflow-hidden group ${
+                  index === 0 ? 'md:col-span-12 lg:col-span-8' : 'md:col-span-6 lg:col-span-4'
+                }`}
               >
-                <div className="flex items-start justify-between mb-3">
+                {index === 0 && (
+                  <div className="absolute right-0 top-0 w-64 h-64 bg-[var(--accent-primary)]/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none group-hover:bg-[var(--accent-primary)]/10 transition-colors" />
+                )}
+                
+                <div className="flex items-start justify-between mb-5 relative z-10">
                   <div>
-                    <h3 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight transition-colors">{goal.title}</h3>
-                    {goal.description && <p className="text-xs text-[var(--text-muted)] mt-1">{goal.description}</p>}
+                    {index === 0 && <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2">Primary Focus</p>}
+                    <h3 className={`font-semibold text-[var(--text-primary)] tracking-tight transition-colors ${index === 0 ? 'text-2xl' : 'text-[15px]'}`}>{goal.title}</h3>
+                    {goal.description && <p className={`text-[var(--text-muted)] mt-2 ${index === 0 ? 'text-sm' : 'text-xs'}`}>{goal.description}</p>}
                   </div>
                   <div className="flex items-center gap-1">
                     {!goal.milestones?.length && (
@@ -107,7 +114,7 @@ export default function Goals() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => generateMilestones(goal.id)} 
                         disabled={milestoneLoading[goal.id]} 
-                        className="p-2 rounded-lg text-blue-400 cursor-pointer" 
+                        className="p-2 rounded-lg text-[var(--accent-primary)] cursor-pointer" 
                         title="AI Generate Milestones"
                       >
                         {milestoneLoading[goal.id] ? (
@@ -129,39 +136,41 @@ export default function Goals() {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-[var(--text-muted)]">Progress</span>
-                    <span className="text-xs text-[var(--accent-primary)] font-medium">{goal.progress || 0}%</span>
+                <div className="mb-6 mt-auto relative z-10">
+                  <div className="flex items-end justify-between mb-2">
+                    <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Progress</span>
+                    <span className={`text-[var(--accent-primary)] font-light tracking-tighter ${index === 0 ? 'text-4xl' : 'text-xl'}`}>{goal.progress || 0}%</span>
                   </div>
-                  <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden">
+                  <div className={`w-full bg-[var(--surface-secondary)] rounded-full overflow-hidden ${index === 0 ? 'h-2' : 'h-1.5'}`}>
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${goal.progress || 0}%` }}
                       transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-blue-600 to-blue-600 rounded-full" 
+                      className="h-full bg-[var(--accent-primary)] rounded-full" 
                     />
                   </div>
                 </div>
 
                 {/* Milestones */}
                 {goal.milestones?.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-[var(--text-muted)] font-medium">Milestones</p>
-                    {goal.milestones.map((m, i) => (
-                      <motion.button 
-                        whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }}
-                        whileTap={{ scale: 0.98 }}
-                        key={i} 
-                        onClick={() => toggleMilestone(goal.id, i)} 
-                        className="flex items-center gap-2 w-full text-left p-2 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <motion.div whileHover={{ scale: 1.2 }}>
-                          <CheckCircle className={`w-4 h-4 flex-shrink-0 ${m.completed ? 'text-[var(--success)]' : 'text-[var(--text-muted)]'}`} />
-                        </motion.div>
-                        <span className={`text-[13px] font-medium transition-colors ${m.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-primary)]'}`}>{m.title}</span>
-                      </motion.button>
-                    ))}
+                  <div className="space-y-2 relative z-10">
+                    <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">Milestones</p>
+                    <div className={index === 0 ? "grid grid-cols-1 md:grid-cols-2 gap-2" : "space-y-2"}>
+                      {goal.milestones.map((m, i) => (
+                        <motion.button 
+                          whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }}
+                          whileTap={{ scale: 0.98 }}
+                          key={i} 
+                          onClick={() => toggleMilestone(goal.id, i)} 
+                          className="flex items-center gap-3 w-full text-left p-2.5 rounded-lg border border-transparent hover:border-[var(--border-color)] transition-all cursor-pointer group"
+                        >
+                          <motion.div whileHover={{ scale: 1.2 }}>
+                            <CheckCircle className={`w-4 h-4 flex-shrink-0 transition-colors ${m.completed ? 'text-emerald-500' : 'text-[var(--text-muted)] group-hover:text-[var(--accent-highlight)]'}`} />
+                          </motion.div>
+                          <span className={`text-[13px] font-medium transition-colors ${m.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]'}`}>{m.title}</span>
+                        </motion.button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </motion.div>
