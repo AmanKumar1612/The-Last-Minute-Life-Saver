@@ -65,7 +65,7 @@ export default function LandingPage() {
         <section className="relative py-40 bg-[var(--background)] border-t border-[var(--border-color)] overflow-hidden">
           {/* Extremely subtle background glow */}
           <div className="absolute inset-0 bg-noise opacity-[0.02] pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[var(--accent-indigo)]/5 rounded-[100%] blur-[100px] pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[var(--accent-primary)]/5 rounded-[100%] blur-[100px] pointer-events-none" />
 
           <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
             <motion.h2 

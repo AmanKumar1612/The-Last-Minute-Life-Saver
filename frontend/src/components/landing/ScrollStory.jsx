@@ -10,7 +10,7 @@ const features = [
     description: "Our cognitive engine analyzes your workload, deadlines, and past habits to automatically rank tasks. Focus on what truly matters, exactly when it matters.",
     illustration: (
       <div className="relative w-full h-[300px] flex items-center justify-center">
-        <div className="absolute inset-0 bg-indigo-500/10 rounded-2xl animate-pulse-glow" />
+        <div className="absolute inset-0 bg-blue-600/10 rounded-2xl animate-pulse-glow" />
         <div className="space-y-4 w-3/4 z-10">
           {[1, 2, 3].map((i) => (
             <motion.div 
@@ -19,9 +19,9 @@ const features = [
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ delay: i * 0.2, type: 'spring' }}
               viewport={{ once: false, margin: "-50px" }}
-              className={`p-4 rounded-xl border ${i === 1 ? 'bg-indigo-500/20 border-indigo-500/50' : 'bg-white/5 border-white/5'} flex items-center gap-4 glass`}
+              className={`p-4 rounded-xl border ${i === 1 ? 'bg-blue-600/20 border-blue-600/50' : 'bg-white/5 border-white/5'} flex items-center gap-4 glass`}
             >
-              <div className={`w-3 h-3 rounded-full ${i === 1 ? 'bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.8)] animate-pulse' : 'bg-slate-600'}`} />
+              <div className={`w-3 h-3 rounded-full ${i === 1 ? 'bg-blue-400 shadow-[0_0_10px_rgba(129,140,248,0.8)] animate-pulse' : 'bg-slate-600'}`} />
               <div className="flex-1">
                 <div className="h-4 w-1/3 bg-white/20 rounded-full mb-2" />
                 <div className="h-2 w-1/4 bg-white/10 rounded-full" />
@@ -46,7 +46,7 @@ const features = [
             whileInView={{ height: `${h}%` }}
             transition={{ duration: 0.8, delay: i * 0.1, type: "spring", bounce: 0.4 }}
             viewport={{ once: false }}
-            className={`flex-1 rounded-t-lg relative z-10 ${i === 3 ? 'bg-gradient-to-t from-indigo-600 to-purple-400 shadow-[0_0_20px_rgba(129,140,248,0.4)]' : 'bg-white/10'}`}
+            className={`flex-1 rounded-t-lg relative z-10 ${i === 3 ? 'bg-gradient-to-t from-blue-700 to-blue-500 shadow-[0_0_20px_rgba(129,140,248,0.4)]' : 'bg-white/10'}`}
           />
         ))}
       </div>
@@ -67,9 +67,9 @@ const features = [
             ]
           }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="w-32 h-32 rounded-full border border-indigo-500/50 flex items-center justify-center bg-indigo-500/10 backdrop-blur-md relative z-10"
+          className="w-32 h-32 rounded-full border border-blue-600/50 flex items-center justify-center bg-blue-600/10 backdrop-blur-md relative z-10"
         >
-          <ShieldCheck size={48} className="text-indigo-400" />
+          <ShieldCheck size={48} className="text-blue-400" />
         </motion.div>
         
         {/* Orbital rings */}
@@ -99,7 +99,7 @@ export default function ScrollStory() {
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-5xl font-bold text-white mb-6"
           >
-            A Workflow <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Reimagined</span>
+            A Workflow <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">Reimagined</span>
           </motion.h2>
         </div>
 
@@ -115,8 +115,8 @@ export default function ScrollStory() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="flex-1 space-y-6"
               >
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-white/10 shadow-lg shadow-indigo-500/10">
-                  <feature.icon size={32} className="text-indigo-400" />
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600/20 to-blue-600/20 flex items-center justify-center border border-white/10 shadow-lg shadow-blue-600/10">
+                  <feature.icon size={32} className="text-blue-400" />
                 </div>
                 <h3 className="text-3xl font-bold text-white tracking-tight">{feature.title}</h3>
                 <p className="text-xl text-slate-400 leading-relaxed font-light">

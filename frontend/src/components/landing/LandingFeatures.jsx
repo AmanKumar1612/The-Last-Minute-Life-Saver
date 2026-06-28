@@ -57,8 +57,8 @@ export default function LandingFeatures() {
           className="max-w-2xl bg-[var(--background)]/80 backdrop-blur-xl p-8 rounded-3xl border border-[var(--border-color)] shadow-2xl pointer-events-auto"
         >
           <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-5 h-5 text-[var(--accent-indigo-light)]" />
-            <h2 className="text-sm font-semibold text-[var(--accent-indigo-light)] uppercase tracking-wider">The Platform</h2>
+            <Zap className="w-5 h-5 text-[var(--accent-highlight)]" />
+            <h2 className="text-sm font-semibold text-[var(--accent-highlight)] uppercase tracking-wider">The Platform</h2>
           </div>
           <h3 className="text-4xl font-bold text-[var(--text-primary)] tracking-tight mb-4 leading-tight">
             Designed for execution. <br /> Built for speed.
@@ -85,7 +85,7 @@ export default function LandingFeatures() {
                 <div className="absolute inset-0 bg-noise opacity-[0.02]" />
                 
                 {/* Glow effect on hover */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-indigo)]/0 rounded-full blur-[80px] group-hover:bg-[var(--accent-indigo)]/10 transition-colors duration-700" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-primary)]/0 rounded-full blur-[80px] group-hover:bg-[var(--accent-primary)]/10 transition-colors duration-700" />
                 
                 <div className="relative z-10">
                   <div className="w-12 h-12 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-color)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform duration-500">
@@ -135,7 +135,7 @@ export default function LandingFeatures() {
                 <circle cx="50" cy="50" r="40" stroke="var(--surface-secondary)" strokeWidth="12" fill="none" />
                 <motion.circle 
                   cx="50" cy="50" r="40" 
-                  stroke="var(--accent-indigo-light)" 
+                  stroke="var(--accent-highlight)" 
                   strokeWidth="12" 
                   fill="none" 
                   strokeDasharray="251" 

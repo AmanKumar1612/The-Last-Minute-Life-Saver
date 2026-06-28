@@ -17,7 +17,7 @@ export default function FeatureSection({
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="flex-1 space-y-6"
       >
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 backdrop-blur-sm">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/10 text-blue-400 border border-blue-600/20 backdrop-blur-sm">
           <Icon size={32} />
         </div>
         <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
@@ -37,7 +37,7 @@ export default function FeatureSection({
         className="flex-1 w-full relative"
       >
         {/* Glow behind the visual */}
-        <div className="absolute inset-0 bg-indigo-600/20 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 bg-blue-700/20 blur-[100px] rounded-full pointer-events-none" />
         
         <div className="relative z-10 p-1 rounded-3xl bg-gradient-to-b from-white/10 to-transparent">
           <div className="bg-slate-900/80 backdrop-blur-xl border border-white/5 rounded-[22px] overflow-hidden shadow-2xl">

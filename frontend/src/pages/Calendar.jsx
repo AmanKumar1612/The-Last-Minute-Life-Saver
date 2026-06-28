@@ -59,10 +59,10 @@ export default function CalendarPage() {
       animate="show"
       className="space-y-6"
     >
-      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Calendar</h1>
-          <p className="text-sm text-slate-400">Schedule and plan your day</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Calendar</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-1">Schedule and plan your day</p>
         </div>
         <div className="flex items-center gap-3">
           <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="input-glass py-2 text-sm w-auto cursor-pointer" />
@@ -84,15 +84,15 @@ export default function CalendarPage() {
       </motion.div>
 
       {!connected && (
-        <motion.div variants={fadeUp} className="glass-card p-8 text-center border border-white/10">
+        <motion.div variants={fadeUp} className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-8 shadow-sm max-w-xl">
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 10 }}
-            className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto mb-4 border border-indigo-500/20"
+            className="w-16 h-16 rounded-full bg-blue-600/10 flex items-center justify-center mb-5 border border-blue-600/20"
           >
-            <Link2 className="w-8 h-8 text-indigo-400" />
+            <Link2 className="w-8 h-8 text-blue-400" />
           </motion.div>
-          <h3 className="text-lg font-semibold text-white mb-2">Connect Google Calendar</h3>
-          <p className="text-sm text-slate-400 mb-4">Link your calendar for smarter scheduling and AI planning</p>
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] tracking-tight mb-2">Connect Google Calendar</h3>
+          <p className="text-sm text-[var(--text-muted)] mb-6">Link your calendar for smarter scheduling and AI planning</p>
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -106,30 +106,30 @@ export default function CalendarPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Events */}
-        <motion.div variants={cardVariants} whileHover="hover" className="glass-card p-6 border border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <CalIcon className="w-5 h-5 text-blue-400" /> Events
+        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
+          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
+            <CalIcon className="w-[18px] h-[18px] text-[var(--accent-highlight)] flex-shrink-0" /> Events
           </h2>
           {loading ? (
             <div className="flex justify-center py-8">
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
-                <Loader2 className="w-6 h-6 text-indigo-400" />
+                <Loader2 className="w-6 h-6 text-[var(--accent-primary)]" />
               </motion.div>
             </div>
           ) : events.length === 0 ? (
-            <p className="text-slate-400 text-sm py-8 text-center">No events for this date</p>
+            <p className="text-[var(--text-muted)] text-sm py-8">No events for this date</p>
           ) : (
             <div className="space-y-3">
               {events.map((evt, i) => (
                 <motion.div 
                   key={i} 
-                  whileHover={{ x: 6, backgroundColor: 'rgba(255,255,255,0.06)' }}
-                  className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-3 transition-colors duration-300"
+                  whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }}
+                  className="p-3 rounded-lg bg-[var(--background)] border border-[var(--border-color)] flex items-center gap-3 transition-colors duration-300"
                 >
-                  <div className="w-1 h-10 rounded-full bg-gradient-to-b from-blue-500 to-cyan-500" />
+                  <div className="w-1 h-10 rounded-full bg-gradient-to-b from-[var(--accent-primary)] to-[var(--accent-highlight)]" />
                   <div>
-                    <p className="text-sm text-white">{evt.summary}</p>
-                    <p className="text-xs text-slate-400">{evt.start} - {evt.end}</p>
+                    <p className="text-[13px] font-medium text-[var(--text-primary)]">{evt.summary}</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">{evt.start} - {evt.end}</p>
                   </div>
                 </motion.div>
               ))}
@@ -138,23 +138,23 @@ export default function CalendarPage() {
         </motion.div>
 
         {/* Free Slots */}
-        <motion.div variants={cardVariants} whileHover="hover" className="glass-card p-6 border border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-green-400" /> Free Time Slots
+        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
+          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
+            <Clock className="w-[18px] h-[18px] text-[var(--success)] flex-shrink-0" /> Free Time Slots
           </h2>
           {freeSlots.length === 0 ? (
-            <p className="text-slate-400 text-sm py-8 text-center">No free slots detected</p>
+            <p className="text-[var(--text-muted)] text-sm py-8">No free slots detected</p>
           ) : (
             <div className="space-y-3">
               {freeSlots.map((slot, i) => (
                 <motion.div 
                   key={i} 
-                  whileHover={{ x: 6, backgroundColor: 'rgba(34,197,94,0.1)' }}
-                  className="p-3 rounded-xl bg-green-500/5 border border-green-500/10 flex items-center justify-between transition-colors duration-300"
+                  whileHover={{ x: 4, backgroundColor: 'rgba(16,185,129,0.1)' }}
+                  className="p-3 rounded-lg bg-green-500/5 border border-green-500/10 flex items-center justify-between transition-colors duration-300"
                 >
                   <div>
-                    <p className="text-sm text-white">{slot.start} - {slot.end}</p>
-                    <p className="text-xs text-green-400">{slot.duration_hours}h available</p>
+                    <p className="text-[13px] font-medium text-[var(--text-primary)]">{slot.start} - {slot.end}</p>
+                    <p className="text-xs text-[var(--success)] mt-0.5">{slot.duration_hours}h available</p>
                   </div>
                 </motion.div>
               ))}
@@ -165,24 +165,24 @@ export default function CalendarPage() {
 
       {/* AI Daily Plan */}
       {dailyPlan && (
-        <motion.div variants={fadeUp} className="glass-card p-6 border border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-            <span className="text-xl">🤖</span> AI Daily Plan
+        <motion.div variants={fadeUp} className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
+          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-2 flex items-center gap-2">
+            <span className="text-[18px]">🤖</span> AI Daily Plan
           </h2>
-          <p className="text-sm text-slate-400 mb-4">{dailyPlan.summary}</p>
+          <p className="text-sm text-[var(--text-muted)] mb-5">{dailyPlan.summary}</p>
           <div className="space-y-2">
             {dailyPlan.blocks?.map((block, i) => (
               <motion.div 
                 key={i} 
                 whileHover={{ scale: 1.01 }}
-                className={`p-3 rounded-xl flex items-center gap-3 transition-colors duration-300 cursor-pointer ${block.type === 'break' ? 'bg-slate-500/5 hover:bg-slate-500/10' : 'bg-indigo-500/5 border border-indigo-500/10 hover:border-indigo-500/30 hover:bg-indigo-500/10'}`}
+                className={`p-3 rounded-lg flex items-center gap-4 transition-colors duration-300 cursor-pointer ${block.type === 'break' ? 'bg-[var(--surface-secondary)] border border-transparent' : 'bg-[var(--background)] border border-[var(--border-color)]'}`}
               >
-                <span className="text-xs text-slate-400 w-24 flex-shrink-0">{block.start_time} - {block.end_time}</span>
+                <span className="text-xs text-[var(--text-secondary)] w-24 flex-shrink-0">{block.start_time} - {block.end_time}</span>
                 <div className="flex-1">
-                  <p className={`text-sm transition-colors ${block.type === 'break' ? 'text-slate-400' : 'text-white'}`}>{block.task_title}</p>
-                  {block.notes && <p className="text-xs text-slate-500">{block.notes}</p>}
+                  <p className={`text-[13px] font-medium transition-colors ${block.type === 'break' ? 'text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>{block.task_title}</p>
+                  {block.notes && <p className="text-xs text-[var(--text-muted)] mt-0.5">{block.notes}</p>}
                 </div>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full transition-colors ${block.type === 'break' ? 'bg-slate-500/20 text-slate-400' : 'bg-indigo-500/20 text-indigo-400'}`}>
+                <span className={`text-[10px] px-2 py-0.5 rounded flex-shrink-0 transition-colors ${block.type === 'break' ? 'bg-[var(--surface-secondary)] text-[var(--text-muted)]' : 'bg-blue-600/10 text-blue-400'}`}>
                   {block.type}
                 </span>
               </motion.div>

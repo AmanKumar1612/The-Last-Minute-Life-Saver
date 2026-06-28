@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import client from '../api/client';
-import { Plus, Trash2, CheckCircle, Clock, AlertTriangle, ChevronDown, Sparkles, X, Loader2 } from 'lucide-react';
+import { Plus, Trash2, CheckCircle, CheckSquare, Clock, AlertTriangle, ChevronDown, Sparkles, X, Loader2 } from 'lucide-react';
 import { formatTimeRemaining, capitalizeFirst } from '../utils/helpers';
 import { CATEGORIES, IMPORTANCE_LEVELS } from '../utils/constants';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -68,8 +68,8 @@ export default function Tasks() {
       {/* Header */}
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Tasks</h1>
-          <p className="text-sm text-slate-400">{tasks.length} tasks total</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Tasks</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-1">{tasks.length} tasks total</p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <motion.button 
@@ -78,7 +78,7 @@ export default function Tasks() {
             onClick={prioritizeAll} 
             className="btn-secondary flex items-center gap-2 text-sm"
           >
-            <Sparkles className="w-4 h-4 text-purple-400" /> AI Prioritize
+            <Sparkles className="w-4 h-4 text-blue-500" /> AI Prioritize
           </motion.button>
           <motion.button 
             whileHover={{ scale: 1.05 }}
@@ -112,13 +112,17 @@ export default function Tasks() {
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full" 
+            className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full" 
           />
         </div>
       ) : tasks.length === 0 ? (
-        <motion.div variants={fadeUp} className="glass-card p-12 text-center">
-          <p className="text-slate-400">No tasks yet. Create your first task!</p>
-        </motion.div>
+        <div className="flex flex-col items-center justify-center p-12 bg-[var(--surface)] border border-dashed border-[var(--border-color)] rounded-xl text-center">
+          <div className="w-12 h-12 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center mb-4">
+            <CheckSquare className="w-6 h-6 text-[var(--text-muted)]" />
+          </div>
+          <p className="text-[15px] font-medium text-[var(--text-primary)] mb-1">No tasks found</p>
+          <p className="text-[13px] text-[var(--text-muted)]">Create your first task to get started.</p>
+        </div>
       ) : (
         <motion.div 
           variants={staggerContainer}
@@ -162,10 +166,10 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
   return (
     <motion.div 
       layout
-      whileHover={{ scale: 1.01, backgroundColor: 'rgba(255,255,255,0.03)' }}
-      className={`glass-card p-4 transition-all duration-300 ${isCompleted ? 'opacity-60' : ''}`}
+      whileHover={{ scale: 1.01, backgroundColor: 'var(--surface-secondary)' }}
+      className={`bg-[var(--surface)] border border-[var(--border-color)] rounded-lg p-5 shadow-sm transition-all duration-300 ${isCompleted ? 'opacity-60' : ''}`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-4">
         {/* Complete checkbox */}
         <motion.button 
           whileHover={{ scale: 1.2 }}
@@ -179,19 +183,19 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className={`text-sm font-medium ${isCompleted ? 'line-through text-slate-400' : 'text-white'}`}>{task.title}</h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h3 className={`text-[15px] font-medium tracking-tight ${isCompleted ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>{task.title}</h3>
             {task.priority_label && (
               <span className={`priority-${task.priority_label.toLowerCase()}`}>
                 {task.priority_label} {task.priority_score ? `(${task.priority_score})` : ''}
               </span>
             )}
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-slate-400">{capitalizeFirst(task.category)}</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--surface-secondary)] text-[var(--text-muted)]">{capitalizeFirst(task.category)}</span>
           </div>
 
-          {task.description && <p className="text-xs text-slate-400 mt-1.5 line-clamp-2">{task.description}</p>}
+          {task.description && <p className="text-xs text-[var(--text-muted)] mt-1.5 line-clamp-2">{task.description}</p>}
 
-          <div className="flex items-center gap-4 mt-2 text-xs text-slate-400 flex-wrap">
+          <div className="flex items-center gap-4 mt-2 text-xs text-[var(--text-muted)] flex-wrap">
             {task.deadline && (
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3 flex-shrink-0" /> {formatTimeRemaining(task.deadline)}
@@ -211,7 +215,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
               <motion.button 
                 whileHover={{ x: 2 }}
                 onClick={() => setExpanded(!expanded)} 
-                className="text-xs text-indigo-400 flex items-center gap-1 hover:text-indigo-300 transition-colors cursor-pointer"
+                className="text-xs text-blue-400 flex items-center gap-1 hover:text-blue-300 transition-colors cursor-pointer"
               >
                 <motion.div animate={{ rotate: expanded ? 180 : 0 }}>
                   <ChevronDown className="w-3 h-3" />
@@ -229,7 +233,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
                     {task.subtasks.map((st, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs">
                         <div className={`w-3 h-3 rounded-full border flex-shrink-0 ${st.completed ? 'bg-green-500 border-green-500' : 'border-slate-500'}`} />
-                        <span className={`min-w-0 ${st.completed ? 'text-slate-400 line-through' : 'text-slate-300'}`}>{st.title}</span>
+                        <span className={`min-w-0 ${st.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-primary)]'}`}>{st.title}</span>
                         {st.estimated_hours && <span className="text-slate-500 ml-auto flex-shrink-0">{st.estimated_hours}h</span>}
                       </div>
                     ))}
@@ -248,7 +252,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
               whileTap={{ scale: 0.9 }}
               onClick={onBreakdown} 
               disabled={breakdownLoading} 
-              className="p-2 rounded-lg text-indigo-400 transition-all cursor-pointer" 
+              className="p-2 rounded-lg text-blue-400 transition-all cursor-pointer" 
               title="AI Breakdown"
             >
               {breakdownLoading ? (
@@ -262,7 +266,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
             whileHover={{ scale: 1.1, backgroundColor: 'rgba(239,68,68,0.1)' }}
             whileTap={{ scale: 0.9 }}
             onClick={onDelete} 
-            className="p-2 rounded-lg text-slate-400 hover:text-red-400 transition-all cursor-pointer"
+            className="p-2 rounded-lg text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
           </motion.button>
@@ -295,19 +299,19 @@ function TaskFormModal({ onClose, onSubmit }) {
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
     >
       <motion.div 
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="glass-card p-6 w-full max-w-lg border border-white/10 shadow-2xl shadow-black/50"
+        className="bg-[var(--surface)] border border-[var(--border-color)] p-8 rounded-xl w-full max-w-lg shadow-2xl shadow-black/50"
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-white">Create New Task</h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Create New Task</h2>
           <motion.button 
             whileHover={{ rotate: 90, scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onClose} 
-            className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </motion.button>
@@ -315,35 +319,35 @@ function TaskFormModal({ onClose, onSubmit }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm text-slate-300 mb-1 block font-medium">Title *</label>
+            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Title *</label>
             <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input-glass w-full" placeholder="What needs to be done?" required />
           </div>
 
           <div>
-            <label className="text-sm text-slate-300 mb-1 block font-medium">Description</label>
+            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Description</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-glass w-full h-20" placeholder="Add details..." />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-slate-300 mb-1 block font-medium">Deadline</label>
+              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Deadline</label>
               <input type="datetime-local" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} className="input-glass w-full" />
             </div>
             <div>
-              <label className="text-sm text-slate-300 mb-1 block font-medium">Estimated Hours</label>
+              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Estimated Hours</label>
               <input type="number" step="0.5" min="0" value={form.estimated_hours} onChange={(e) => setForm({ ...form, estimated_hours: e.target.value })} className="input-glass w-full" placeholder="e.g., 3" />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-slate-300 mb-1 block font-medium">Importance</label>
+              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Importance</label>
               <select value={form.importance} onChange={(e) => setForm({ ...form, importance: e.target.value })} className="input-glass w-full">
                 {IMPORTANCE_LEVELS.map(l => <option key={l} value={l}>{capitalizeFirst(l)}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-sm text-slate-300 mb-1 block font-medium">Category</label>
+              <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Category</label>
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input-glass w-full">
                 {CATEGORIES.map(c => <option key={c} value={c}>{capitalizeFirst(c)}</option>)}
               </select>

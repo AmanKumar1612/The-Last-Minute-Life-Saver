@@ -36,8 +36,8 @@ export default function MagneticButton({
       onClick={onClick}
       className={`relative overflow-hidden flex items-center justify-center rounded-lg font-medium transition-colors duration-200 group ${
         primary 
-          ? 'bg-white text-black px-6 py-2.5 hover:bg-slate-200' 
-          : 'bg-[#171B24] border border-white/10 text-white px-5 py-2.5 hover:bg-[#1C212C] hover:border-white/20'
+          ? 'bg-[var(--text-primary)] text-[var(--background)] px-6 py-2.5 hover:bg-[var(--text-secondary)]' 
+          : 'bg-[var(--surface)] border border-[var(--border-color)] text-[var(--text-primary)] px-5 py-2.5 hover:bg-[var(--surface-secondary)]'
       } ${className}`}
     >
       <span className="relative z-10 flex items-center gap-2">

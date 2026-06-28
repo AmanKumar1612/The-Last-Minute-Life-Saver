@@ -5,7 +5,7 @@ const orbitingTasks = [
   { id: 1, icon: <CheckCircle size={20} />, title: 'Optimize DB', angle: 0, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
   { id: 2, icon: <Zap size={20} />, title: 'Run Diagnostics', angle: 60, color: 'text-amber-400', bg: 'bg-amber-400/10' },
   { id: 3, icon: <Shield size={20} />, title: 'Security Scan', angle: 120, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-  { id: 4, icon: <Database size={20} />, title: 'Sync Data', angle: 180, color: 'text-purple-400', bg: 'bg-purple-400/10' },
+  { id: 4, icon: <Database size={20} />, title: 'Sync Data', angle: 180, color: 'text-blue-500', bg: 'bg-blue-500/10' },
   { id: 5, icon: <Cloud size={20} />, title: 'Deploy Nodes', angle: 240, color: 'text-cyan-400', bg: 'bg-cyan-400/10' },
   { id: 6, icon: <Bot size={20} />, title: 'Train Model', angle: 300, color: 'text-rose-400', bg: 'bg-rose-400/10' }
 ];
@@ -18,12 +18,12 @@ export default function HeroCore() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="w-96 h-96 bg-indigo-600/40 rounded-full blur-[100px]"
+          className="w-96 h-96 bg-blue-700/40 rounded-full blur-[100px]"
         />
         <motion.div 
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute w-80 h-80 bg-fuchsia-600/30 rounded-full blur-[80px]"
+          className="absolute w-80 h-80 bg-blue-700/30 rounded-full blur-[80px]"
         />
       </div>
 
@@ -40,7 +40,7 @@ export default function HeroCore() {
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute w-32 h-32 border border-indigo-500/30 rounded-full"
+          className="absolute w-32 h-32 border border-blue-600/30 rounded-full"
         />
 
         {/* The Core */}
@@ -53,7 +53,7 @@ export default function HeroCore() {
             ]
           }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/50 backdrop-blur-xl border border-white/20"
+          className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/50 backdrop-blur-xl border border-white/20"
         >
           <Bot className="text-white drop-shadow-md" size={32} />
         </motion.div>

@@ -65,8 +65,8 @@ export default function Login() {
             transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] bg-grid-premium opacity-30 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"
           />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--accent-indigo)]/10 rounded-full blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--accent-cyan)]/5 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--accent-primary)]/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--accent-secondary)]/5 rounded-full blur-[120px] pointer-events-none" />
         </div>
 
         <div className="relative z-10">
@@ -104,7 +104,7 @@ export default function Login() {
               className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border-color)] bg-[var(--surface-secondary)]/50 backdrop-blur-sm cursor-default"
             >
               <div className="w-10 h-10 rounded-lg bg-[var(--surface)] border border-[var(--border-color)] flex items-center justify-center">
-                <feature.icon className="w-4 h-4 text-[var(--accent-indigo-light)]" />
+                <feature.icon className="w-4 h-4 text-[var(--accent-highlight)]" />
               </div>
               <span className="text-[var(--text-primary)] font-medium text-sm">{feature.text}</span>
             </motion.div>
@@ -116,7 +116,7 @@ export default function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative">
         {/* Mobile background */}
         <div className="absolute inset-0 bg-noise opacity-[0.02] lg:hidden z-0 pointer-events-none" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-indigo)]/5 rounded-full blur-[100px] pointer-events-none z-0" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-primary)]/5 rounded-full blur-[100px] pointer-events-none z-0" />
         
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -161,7 +161,7 @@ export default function Login() {
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-slate-300">Password</label>
+                <label className="text-[13px] font-medium text-[var(--text-muted)]">Password</label>
                 <a href="#" className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
                   Forgot password?
                 </a>
@@ -174,14 +174,14 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[var(--surface)] border border-[var(--border-color)] rounded-lg pl-9 pr-10 py-2 text-sm text-white placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-indigo-light)] transition-colors"
+                  className="w-full bg-[var(--surface)] border border-[var(--border-color)] rounded-lg pl-9 pr-10 py-2 text-sm text-white placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-highlight)] transition-colors"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>

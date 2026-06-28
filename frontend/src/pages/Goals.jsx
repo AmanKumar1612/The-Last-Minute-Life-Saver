@@ -58,8 +58,8 @@ export default function Goals() {
     >
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Goals</h1>
-          <p className="text-sm text-slate-400">Track your long-term goals with AI milestones</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Goals</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-1">Track your long-term goals with AI milestones</p>
         </div>
         <motion.button 
           whileHover={{ scale: 1.05 }}
@@ -73,13 +73,16 @@ export default function Goals() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full" />
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full" />
         </div>
       ) : goals.length === 0 ? (
-        <motion.div variants={fadeUp} className="glass-card p-12 text-center border border-white/10">
-          <Target className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
-          <p className="text-slate-400">No goals yet. Set your first goal!</p>
-        </motion.div>
+        <div className="flex flex-col items-center justify-center p-12 bg-[var(--surface)] border border-dashed border-[var(--border-color)] rounded-xl text-center">
+          <div className="w-12 h-12 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center mb-4">
+            <Target className="w-6 h-6 text-[var(--text-muted)]" />
+          </div>
+          <p className="text-[15px] font-medium text-[var(--text-primary)] mb-1">No goals found</p>
+          <p className="text-[13px] text-[var(--text-muted)]">Set a new goal to start tracking progress.</p>
+        </div>
       ) : (
         <motion.div variants={staggerContainer} initial="hidden" animate="show" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <AnimatePresence mode="popLayout">
@@ -90,12 +93,12 @@ export default function Goals() {
                 variants={cardVariants} 
                 whileHover="hover"
                 exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                className="glass-card p-6 border border-white/10"
+                className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="text-white font-semibold transition-colors">{goal.title}</h3>
-                    {goal.description && <p className="text-xs text-slate-400 mt-1">{goal.description}</p>}
+                    <h3 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight transition-colors">{goal.title}</h3>
+                    {goal.description && <p className="text-xs text-[var(--text-muted)] mt-1">{goal.description}</p>}
                   </div>
                   <div className="flex items-center gap-1">
                     {!goal.milestones?.length && (
@@ -104,7 +107,7 @@ export default function Goals() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => generateMilestones(goal.id)} 
                         disabled={milestoneLoading[goal.id]} 
-                        className="p-2 rounded-lg text-indigo-400 cursor-pointer" 
+                        className="p-2 rounded-lg text-blue-400 cursor-pointer" 
                         title="AI Generate Milestones"
                       >
                         {milestoneLoading[goal.id] ? (
@@ -118,7 +121,7 @@ export default function Goals() {
                       whileHover={{ scale: 1.1, backgroundColor: 'rgba(239,68,68,0.1)' }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => deleteGoal(goal.id)} 
-                      className="p-2 rounded-lg text-slate-400 hover:text-red-400 cursor-pointer"
+                      className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--danger)] hover:bg-red-500/10 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </motion.button>
@@ -128,15 +131,15 @@ export default function Goals() {
                 {/* Progress Bar */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-400">Progress</span>
-                    <span className="text-xs text-indigo-400 font-medium">{goal.progress || 0}%</span>
+                    <span className="text-xs text-[var(--text-muted)]">Progress</span>
+                    <span className="text-xs text-[var(--accent-primary)] font-medium">{goal.progress || 0}%</span>
                   </div>
                   <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${goal.progress || 0}%` }}
                       transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" 
+                      className="h-full bg-gradient-to-r from-blue-600 to-blue-600 rounded-full" 
                     />
                   </div>
                 </div>
@@ -144,19 +147,19 @@ export default function Goals() {
                 {/* Milestones */}
                 {goal.milestones?.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-xs text-slate-400 font-medium">Milestones</p>
+                    <p className="text-xs text-[var(--text-muted)] font-medium">Milestones</p>
                     {goal.milestones.map((m, i) => (
                       <motion.button 
-                        whileHover={{ x: 4, backgroundColor: 'rgba(255,255,255,0.03)' }}
+                        whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }}
                         whileTap={{ scale: 0.98 }}
                         key={i} 
                         onClick={() => toggleMilestone(goal.id, i)} 
                         className="flex items-center gap-2 w-full text-left p-2 rounded-lg transition-colors cursor-pointer"
                       >
                         <motion.div whileHover={{ scale: 1.2 }}>
-                          <CheckCircle className={`w-4 h-4 flex-shrink-0 ${m.completed ? 'text-green-500' : 'text-slate-500'}`} />
+                          <CheckCircle className={`w-4 h-4 flex-shrink-0 ${m.completed ? 'text-[var(--success)]' : 'text-[var(--text-muted)]'}`} />
                         </motion.div>
-                        <span className={`text-xs transition-colors ${m.completed ? 'text-slate-400 line-through' : 'text-slate-300'}`}>{m.title}</span>
+                        <span className={`text-[13px] font-medium transition-colors ${m.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-primary)]'}`}>{m.title}</span>
                       </motion.button>
                     ))}
                   </div>
@@ -196,37 +199,37 @@ function GoalFormModal({ onClose, onSubmit }) {
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
     >
       <motion.div 
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="glass-card p-6 w-full max-w-md border border-white/10 shadow-2xl shadow-black/50"
+        className="bg-[var(--surface)] border border-[var(--border-color)] p-8 w-full max-w-md rounded-xl shadow-2xl shadow-black/50"
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-white">Create New Goal</h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Create New Goal</h2>
           <motion.button 
             whileHover={{ rotate: 90, scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onClose} 
-            className="text-slate-400 hover:text-white cursor-pointer"
+            className="text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </motion.button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm text-slate-300 mb-1 block">Goal Title *</label>
-            <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input-glass w-full" placeholder="e.g., Learn Machine Learning" required />
+            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Goal Title *</label>
+            <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input-premium w-full" placeholder="e.g., Learn Machine Learning" required />
           </div>
           <div>
-            <label className="text-sm text-slate-300 mb-1 block">Description</label>
-            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-glass w-full h-20 resize-none" placeholder="What do you want to achieve?" />
+            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Description</label>
+            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input-premium w-full h-20 resize-none" placeholder="What do you want to achieve?" />
           </div>
           <div>
-            <label className="text-sm text-slate-300 mb-1 block">Target Date</label>
-            <input type="date" value={form.target_date} onChange={(e) => setForm({ ...form, target_date: e.target.value })} className="input-glass w-full cursor-pointer" />
+            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Target Date</label>
+            <input type="date" value={form.target_date} onChange={(e) => setForm({ ...form, target_date: e.target.value })} className="input-premium w-full cursor-pointer" />
           </div>
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-4">
             <motion.button 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

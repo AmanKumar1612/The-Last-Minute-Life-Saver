@@ -10,12 +10,12 @@ const Button = forwardRef(({
   ...props 
 }, ref) => {
   
-  const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:ring-offset-2 focus:ring-offset-[#0B0D12] disabled:opacity-50 disabled:pointer-events-none";
+  const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:ring-offset-2 focus:ring-offset-[#0B0D12] disabled:opacity-50 disabled:pointer-events-none";
   
   const variants = {
-    primary: "bg-white text-black hover:bg-slate-200 shadow-sm",
-    secondary: "bg-[#171B24] border border-white/10 text-white hover:bg-[#1C212C] hover:border-white/20",
-    ghost: "bg-transparent text-slate-400 hover:text-white hover:bg-white/5",
+    primary: "bg-[var(--text-primary)] text-[var(--background)] hover:bg-[var(--text-secondary)] shadow-sm",
+    secondary: "bg-[var(--surface)] border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]",
+    ghost: "bg-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)]",
     danger: "bg-red-500/10 text-red-500 hover:bg-red-500/20"
   };
   

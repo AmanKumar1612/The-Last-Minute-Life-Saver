@@ -13,7 +13,7 @@ const MockDashboardWidget = () => (
   >
     <div className="flex items-center justify-between mb-4">
       <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">AI Priority</h4>
-      <div className="flex items-center gap-1 text-[var(--accent-cyan)] bg-[var(--accent-cyan)]/10 px-2 py-0.5 rounded text-[10px] font-medium">
+      <div className="flex items-center gap-1 text-[var(--accent-secondary)] bg-[var(--accent-secondary)]/10 px-2 py-0.5 rounded text-[10px] font-medium">
         <Zap className="w-3 h-3" />
         Optimization Active
       </div>
@@ -21,7 +21,7 @@ const MockDashboardWidget = () => (
     <div className="space-y-3">
       {[1, 2].map((i) => (
         <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-[var(--surface-secondary)]/50 hover:bg-[var(--surface-secondary)] transition-colors cursor-default border border-transparent hover:border-[var(--border-color)]">
-          <div className={`w-8 h-8 rounded-md flex items-center justify-center ${i === 1 ? 'bg-red-500/10 text-red-400' : 'bg-indigo-500/10 text-indigo-400'}`}>
+          <div className={`w-8 h-8 rounded-md flex items-center justify-center ${i === 1 ? 'bg-red-500/10 text-red-400' : 'bg-blue-600/10 text-blue-400'}`}>
             {i === 1 ? <Clock className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}
           </div>
           <div>
@@ -45,8 +45,8 @@ export default function PremiumHero() {
       {/* Subtle Grid & Glow Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-grid-premium opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[var(--accent-indigo)]/10 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[var(--accent-cyan)]/5 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[var(--accent-primary)]/10 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[var(--accent-secondary)]/5 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 w-full relative z-10">
@@ -63,7 +63,7 @@ export default function PremiumHero() {
               transition={{ duration: 0.6 }}
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--border-color)] bg-[var(--surface)] text-[13px] font-medium text-[var(--text-secondary)] mb-8"
             >
-              <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[var(--accent-secondary)] animate-pulse" />
               Intelligence Engine v2.0 Live
             </motion.div>
 
@@ -146,8 +146,8 @@ export default function PremiumHero() {
                 <div className="flex-1 pl-6 flex flex-col gap-4">
                   <div className="h-8 w-1/3 bg-[var(--surface)] rounded-md border border-[var(--border-color)]" />
                   <div className="flex gap-4 h-24">
-                    <div className="flex-1 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl relative overflow-hidden group-hover:border-[var(--accent-indigo-light)] transition-colors duration-500">
-                       <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-indigo)]/5 to-transparent" />
+                    <div className="flex-1 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl relative overflow-hidden group-hover:border-[var(--accent-highlight)] transition-colors duration-500">
+                       <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-primary)]/5 to-transparent" />
                     </div>
                     <div className="flex-1 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl" />
                     <div className="flex-1 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl" />
@@ -164,7 +164,7 @@ export default function PremiumHero() {
                       />
                       <defs>
                         <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="var(--accent-indigo-light)" />
+                          <stop offset="0%" stopColor="var(--accent-highlight)" />
                           <stop offset="100%" stopColor="transparent" />
                         </linearGradient>
                       </defs>

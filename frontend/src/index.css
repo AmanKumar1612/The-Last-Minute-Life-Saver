@@ -3,21 +3,21 @@
 @layer base {
   :root {
     /* Premium SaaS Palette */
-    --background: #0B0D12;
-    --surface: #11141B;
-    --surface-secondary: #171B24;
+    --background: #0A0D12;
+    --surface: #11161D;
+    --surface-secondary: #171E28;
     
     --border-color: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(255, 255, 255, 0.15);
     
     --text-primary: #F8FAFC;
-    --text-secondary: #A8B3C7;
-    --text-muted: #7C8598;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
     
-    /* Accents: Deep Indigo to Slate/Cyan */
-    --accent-indigo: #4F46E5;
-    --accent-indigo-light: #818CF8;
-    --accent-cyan: #06B6D4;
+    /* Accents: Restrained Blue System */
+    --accent-primary: #2563EB;
+    --accent-secondary: #3B82F6;
+    --accent-highlight: #60A5FA;
     
     /* Semantic Colors */
     --success: #10B981;
@@ -101,8 +101,8 @@
   }
 
   .input-premium:focus {
-    border-color: var(--accent-indigo-light);
-    box-shadow: 0 0 0 1px var(--accent-indigo-light);
+    border-color: var(--accent-highlight);
+    box-shadow: 0 0 0 1px var(--accent-highlight);
   }
 
   .input-premium::placeholder {
@@ -202,7 +202,7 @@
   }
   
   .gradient-text-accent {
-    background: linear-gradient(135deg, var(--accent-indigo-light) 0%, var(--text-primary) 100%);
+    background: linear-gradient(135deg, var(--accent-highlight) 0%, var(--text-primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -210,7 +210,7 @@
 
   /* ─── Status Badges ─────────────────────────────── */
   .badge-neutral { background: var(--surface-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
-  .badge-accent { background: rgba(79, 70, 229, 0.1); color: var(--accent-indigo-light); border: 1px solid rgba(79, 70, 229, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+  .badge-accent { background: rgba(59, 130, 246, 0.1); color: var(--accent-highlight); border: 1px solid rgba(59, 130, 246, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
   .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
   .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
 }

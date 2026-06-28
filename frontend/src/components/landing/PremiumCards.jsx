@@ -49,10 +49,10 @@ export function TiltCard({ children, className = '' }) {
       }}
       className={`relative group ${className}`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <div 
         style={{ transform: "translateZ(50px)" }}
-        className="glass-card h-full w-full p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-300 group-hover:border-indigo-500/30 group-hover:bg-white/10"
+        className="h-full w-full p-8 rounded-2xl border border-[var(--border-color)] bg-[var(--surface)] backdrop-blur-xl transition-all duration-300 group-hover:border-[var(--accent-primary)]/30 group-hover:bg-[var(--surface-secondary)] shadow-sm"
       >
         {children}
       </div>
@@ -64,8 +64,8 @@ export function AnimatedBorderCard({ children, className = '' }) {
   return (
     <div className={`relative group p-[1px] rounded-2xl overflow-hidden ${className}`}>
       {/* Animated Gradient Border */}
-      <div className="absolute inset-[-100%] bg-gradient-to-r from-transparent via-indigo-500 to-transparent animate-[spin_4s_linear_infinite] opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="absolute inset-[1px] bg-[#0A0A10] rounded-2xl z-0" />
+      <div className="absolute inset-[-100%] bg-gradient-to-r from-transparent via-blue-600 to-transparent animate-[spin_4s_linear_infinite] opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-[1px] bg-[var(--surface)] rounded-2xl z-0" />
       
       {/* Content */}
       <div className="relative z-10 h-full w-full p-8 rounded-2xl">

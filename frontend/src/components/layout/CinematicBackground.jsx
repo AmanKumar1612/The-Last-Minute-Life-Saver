@@ -19,7 +19,7 @@ export default function CinematicBackground() {
           y: [0, -50, 0],
         }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full bg-indigo-900/20 blur-[120px] mix-blend-screen"
+        className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full bg-blue-900/20 blur-[120px] mix-blend-screen"
       />
       
       <motion.div
@@ -30,7 +30,7 @@ export default function CinematicBackground() {
           y: [0, 50, 0],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear", delay: 2 }}
-        className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-purple-900/20 blur-[100px] mix-blend-screen"
+        className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-blue-900/20 blur-[100px] mix-blend-screen"
       />
       
       {/* Floating Particles */}
@@ -53,7 +53,7 @@ export default function CinematicBackground() {
               delay: Math.random() * 5,
               ease: "linear"
             }}
-            className="absolute rounded-full bg-indigo-300"
+            className="absolute rounded-full bg-blue-300"
             style={{ 
               width: Math.random() * 3 + 1, 
               height: Math.random() * 3 + 1 
