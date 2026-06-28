@@ -60,7 +60,7 @@ export default function Tasks() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       variants={staggerContainer}
       initial="hidden"
       animate="show"
@@ -69,7 +69,7 @@ export default function Tasks() {
       {/* Header */}
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-8 border-b divider-subtle">
         <div>
-          <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight mb-2">Priority Queue</h1>
+          <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight mb-2">Priority Tasks</h1>
           <p className="text-[var(--text-muted)] text-sm">Managing {tasks.length} open objectives.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4">
@@ -88,18 +88,18 @@ export default function Tasks() {
           </div>
           <div className="h-4 w-[1px] bg-[var(--border-color)] hidden sm:block mx-1"></div>
           <div className="flex items-center gap-2">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={prioritizeAll} 
+              onClick={prioritizeAll}
               className="text-[13px] font-medium text-blue-500 hover:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors"
             >
               <Sparkles className="w-3.5 h-3.5" /> AI Prioritize
             </motion.button>
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowForm(true)} 
+              onClick={() => setShowForm(true)}
               className="text-[13px] font-medium text-[var(--background)] bg-[var(--text-primary)] hover:opacity-90 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors shadow-lg shadow-white/5"
             >
               <Plus className="w-3.5 h-3.5" /> New Task
@@ -124,7 +124,7 @@ export default function Tasks() {
           <p className="text-[13px] text-[var(--text-muted)]">Create your first task to get started.</p>
         </div>
       ) : (
-        <motion.div 
+        <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="show"
@@ -165,22 +165,21 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
   const isCritical = task.priority_label === 'Critical' && !isCompleted;
 
   return (
-    <motion.div 
+    <motion.div
       layout
       whileHover={{ backgroundColor: 'var(--surface-secondary)' }}
-      className={`transition-colors duration-300 relative group border-b divider-subtle last:border-0 py-6 px-4 ${
-        isCompleted ? 'opacity-60' : ''
-      }`}
+      className={`transition-colors duration-300 relative group border-b divider-subtle last:border-0 py-6 px-4 ${isCompleted ? 'opacity-60' : ''
+        }`}
     >
       {isCritical && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1/2 w-[3px] bg-red-500 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />}
-      
+
       <div className="flex items-start gap-5">
         {/* Complete checkbox */}
-        <motion.button 
+        <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={onComplete} 
-          disabled={isCompleted} 
+          onClick={onComplete}
+          disabled={isCompleted}
           className={`mt-1 flex-shrink-0 cursor-pointer ${isCompleted ? 'text-emerald-500' : 'text-[var(--border-color)] hover:text-emerald-400 group-hover:text-[var(--text-muted)]'} transition-colors`}
         >
           <CheckCircle className={isCritical ? "w-6 h-6" : "w-5 h-5"} />
@@ -193,9 +192,8 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
               {task.title}
             </h3>
             {task.priority_label && (
-              <span className={`text-[10px] uppercase font-bold tracking-widest ${
-                isCritical ? 'text-red-500' : task.priority_label === 'High' ? 'text-orange-500' : task.priority_label === 'Medium' ? 'text-yellow-500' : 'text-emerald-500'
-              }`}>
+              <span className={`text-[10px] uppercase font-bold tracking-widest ${isCritical ? 'text-red-500' : task.priority_label === 'High' ? 'text-orange-500' : task.priority_label === 'Medium' ? 'text-yellow-500' : 'text-emerald-500'
+                }`}>
                 {task.priority_label} {task.priority_score ? `[${task.priority_score}]` : ''}
               </span>
             )}
@@ -205,7 +203,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
 
           <div className="flex items-center gap-6 text-[12px] font-medium text-[var(--text-muted)] flex-wrap">
             <span className="uppercase tracking-widest text-[10px] border border-[var(--border-color)] px-2 py-0.5 rounded-full">{capitalizeFirst(task.category)}</span>
-            
+
             {task.deadline && (
               <span className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5" /> {formatTimeRemaining(task.deadline)}
@@ -222,9 +220,9 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
           {/* Subtasks */}
           {task.subtasks?.length > 0 && (
             <div className="mt-4">
-              <motion.button 
+              <motion.button
                 whileHover={{ x: 2 }}
-                onClick={() => setExpanded(!expanded)} 
+                onClick={() => setExpanded(!expanded)}
                 className="text-[11px] font-bold uppercase tracking-wider text-[var(--accent-primary)] flex items-center gap-1 hover:text-[var(--accent-highlight)] transition-colors cursor-pointer"
               >
                 <motion.div animate={{ rotate: expanded ? 180 : 0 }}>
@@ -234,7 +232,7 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
               </motion.button>
               <AnimatePresence>
                 {expanded && (
-                  <motion.div 
+                  <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -257,12 +255,12 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
         {/* Actions - Appear on hover */}
         <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
           {!isCompleted && !task.subtasks?.length && (
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={onBreakdown} 
-              disabled={breakdownLoading} 
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-colors cursor-pointer border border-transparent hover:border-[var(--accent-highlight)]" 
+              onClick={onBreakdown}
+              disabled={breakdownLoading}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-colors cursor-pointer border border-transparent hover:border-[var(--accent-highlight)]"
               title="AI Breakdown"
             >
               {breakdownLoading ? (
@@ -272,10 +270,10 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
               ) : <Sparkles className="w-4 h-4" />}
             </motion.button>
           )}
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={onDelete} 
+            onClick={onDelete}
             className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:bg-red-500 hover:text-white transition-colors cursor-pointer border border-transparent hover:border-red-400"
           >
             <Trash2 className="w-4 h-4" />
@@ -302,13 +300,13 @@ function TaskFormModal({ onClose, onSubmit }) {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
     >
-      <motion.div 
+      <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -317,10 +315,10 @@ function TaskFormModal({ onClose, onSubmit }) {
       >
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-light text-[var(--text-primary)] tracking-tight">Create New Task</h2>
-          <motion.button 
+          <motion.button
             whileHover={{ rotate: 90, scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={onClose} 
+            onClick={onClose}
             className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-8 h-8 flex items-center justify-center rounded-full bg-[var(--surface-secondary)]"
           >
             <X className="w-4 h-4" />
@@ -346,7 +344,7 @@ function TaskFormModal({ onClose, onSubmit }) {
             <div className="w-full md:w-64 space-y-5">
               <div className="p-5 rounded-xl bg-[var(--surface-secondary)]/30 border border-[var(--border-color)] space-y-5">
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-1.5"><Clock className="w-3 h-3"/> Deadline</label>
+                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-1.5"><Clock className="w-3 h-3" /> Deadline</label>
                   <input type="datetime-local" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3" />
                 </div>
                 <div>
@@ -354,7 +352,7 @@ function TaskFormModal({ onClose, onSubmit }) {
                   <input type="number" step="0.5" min="0" value={form.estimated_hours} onChange={(e) => setForm({ ...form, estimated_hours: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3" placeholder="e.g., 3" />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3 h-3 text-[var(--warning)]"/> Importance</label>
+                  <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3 h-3 text-[var(--warning)]" /> Importance</label>
                   <select value={form.importance} onChange={(e) => setForm({ ...form, importance: e.target.value })} className="input-glass w-full text-[13px] py-2 px-3">
                     {IMPORTANCE_LEVELS.map(l => <option key={l} value={l}>{capitalizeFirst(l)}</option>)}
                   </select>
@@ -370,20 +368,20 @@ function TaskFormModal({ onClose, onSubmit }) {
           </div>
 
           <div className="flex gap-4 pt-6 mt-6 border-t border-[var(--border-color)]">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              type="button" 
-              onClick={onClose} 
+              type="button"
+              onClick={onClose}
               className="btn-secondary flex-1 py-3"
             >
               Cancel
             </motion.button>
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              type="submit" 
-              disabled={loading} 
+              type="submit"
+              disabled={loading}
               className="btn-primary flex-[2] py-3 gap-2"
             >
               {loading ? (

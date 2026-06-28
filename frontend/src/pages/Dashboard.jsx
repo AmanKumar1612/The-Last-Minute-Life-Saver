@@ -44,7 +44,7 @@ export default function Dashboard() {
       setTasks(tasksRes.data.tasks || []);
       setAnalytics(analyticsRes.data);
 
-      client.post('/ai/coach').then(res => setAiInsights(res.data)).catch(() => {});
+      client.post('/ai/coach').then(res => setAiInsights(res.data)).catch(() => { });
     } catch (err) {
       console.error('Dashboard load error:', err);
     } finally {
@@ -80,7 +80,7 @@ export default function Dashboard() {
   );
 
   return (
-    <motion.div 
+    <motion.div
       variants={staggerContainer}
       initial="hidden"
       animate="show"
@@ -143,7 +143,7 @@ export default function Dashboard() {
               <p className="text-2xl lg:text-3xl text-[var(--text-primary)] leading-tight font-light italic tracking-tight text-balance">
                 "{aiInsights.coaching.nudge}"
               </p>
-              
+
               {aiInsights.coaching.focus_suggestion && (
                 <div className="pl-6 border-l-2 divider-subtle mt-8">
                   <p className="label-micro mb-2">{aiInsights.coaching.focus_suggestion.technique}</p>
@@ -176,7 +176,7 @@ export default function Dashboard() {
 
         {/* Today's Tasks */}
         <motion.div variants={fadeUp} className="lg:col-span-7 flex flex-col">
-          <h2 className="label-micro mb-8">Priority Queue</h2>
+          <h2 className="label-micro mb-8">Priority Tasks</h2>
           {todayTasks.length === 0 ? (
             <div className="flex flex-col items-start justify-center py-12">
               <p className="text-xl font-light text-[var(--text-muted)]">Inbox zero achieved.</p>
@@ -184,7 +184,7 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-0">
               {todayTasks.slice(0, 5).map(task => (
-                <motion.div 
+                <motion.div
                   key={task.id}
                   whileHover={{ x: 8 }}
                   className="flex flex-col gap-1 py-5 border-b divider-subtle group cursor-pointer"
@@ -251,16 +251,16 @@ export default function Dashboard() {
                   <span className="text-5xl font-light tracking-tighter text-[var(--text-primary)]">{analytics.goal_progress[0].progress}</span><span className="text-[var(--text-muted)]">%</span>
                 </div>
                 <div className="w-full h-[1px] bg-[var(--surface-secondary)] overflow-hidden mt-6">
-                  <motion.div 
+                  <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${analytics.goal_progress[0].progress}%` }}
                     transition={{ duration: 1.5, ease: "easeOut" }}
-                    className="h-full bg-[var(--text-primary)]" 
+                    className="h-full bg-[var(--text-primary)]"
                   />
                 </div>
               </div>
             )}
-            
+
             {/* Secondary Goals */}
             {analytics.goal_progress.length > 1 && (
               <div className="flex flex-col justify-center">
@@ -271,11 +271,11 @@ export default function Dashboard() {
                       <span className="label-micro">{goal.progress}%</span>
                     </div>
                     <div className="w-full h-[1px] bg-[var(--surface-secondary)] overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${goal.progress}%` }}
                         transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                        className="h-full bg-[var(--text-secondary)]" 
+                        className="h-full bg-[var(--text-secondary)]"
                       />
                     </div>
                   </div>
