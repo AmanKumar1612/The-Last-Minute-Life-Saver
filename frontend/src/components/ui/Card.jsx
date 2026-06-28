@@ -1,11 +1,17 @@
+import { motion } from 'framer-motion';
+import { premiumLift } from '../../lib/motion';
+
 export function Card({ className = '', children, ...props }) {
   return (
-    <div 
-      className={`bg-[var(--surface)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] shadow-sm transition-all duration-200 ${className}`} 
+    <motion.div 
+      variants={premiumLift}
+      initial="rest"
+      whileHover="hover"
+      className={`bg-[var(--surface)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] shadow-sm relative overflow-hidden group ${className}`} 
       {...props}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 

@@ -5,6 +5,7 @@ import { formatTimeRemaining, capitalizeFirst } from '../utils/helpers';
 import { CATEGORIES, IMPORTANCE_LEVELS } from '../utils/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { staggerContainer, fadeUp, hoverLift } from '../lib/motion';
+import Skeleton from '../components/ui/Skeleton';
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -66,54 +67,53 @@ export default function Tasks() {
       className="space-y-6"
     >
       {/* Header */}
-      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-8 border-b divider-subtle">
         <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Tasks</h1>
-          <p className="text-sm text-[var(--text-muted)] mt-1">{tasks.length} tasks total</p>
+          <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight mb-2">Priority Queue</h1>
+          <p className="text-[var(--text-muted)] text-sm">Managing {tasks.length} open objectives.</p>
         </div>
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={prioritizeAll} 
-            className="btn-secondary flex items-center gap-2 text-sm"
-          >
-            <Sparkles className="w-4 h-4 text-blue-500" /> AI Prioritize
-          </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowForm(true)} 
-            className="btn-primary flex items-center gap-2 text-sm"
-          >
-            <Plus className="w-4 h-4" /> New Task
-          </motion.button>
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4">
+          <div className="flex gap-2">
+            <select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })} className="bg-transparent text-[13px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--border-color)] rounded-full px-3 py-1.5 transition-colors cursor-pointer outline-none">
+              <option value="">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="overdue">Overdue</option>
+            </select>
+            <select value={filter.category} onChange={(e) => setFilter({ ...filter, category: e.target.value })} className="bg-transparent text-[13px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--border-color)] rounded-full px-3 py-1.5 transition-colors cursor-pointer outline-none">
+              <option value="">All Categories</option>
+              {CATEGORIES.map(c => <option key={c} value={c}>{capitalizeFirst(c)}</option>)}
+            </select>
+          </div>
+          <div className="h-4 w-[1px] bg-[var(--border-color)] hidden sm:block mx-1"></div>
+          <div className="flex items-center gap-2">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={prioritizeAll} 
+              className="text-[13px] font-medium text-blue-500 hover:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> AI Prioritize
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowForm(true)} 
+              className="text-[13px] font-medium text-[var(--background)] bg-[var(--text-primary)] hover:opacity-90 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors shadow-lg shadow-white/5"
+            >
+              <Plus className="w-3.5 h-3.5" /> New Task
+            </motion.button>
+          </div>
         </div>
-      </motion.div>
-
-      {/* Filters */}
-      <motion.div variants={fadeUp} className="flex gap-3 flex-wrap">
-        <select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })} className="input-glass py-2 px-4 text-sm w-36">
-          <option value="">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="in_progress">In Progress</option>
-          <option value="completed">Completed</option>
-          <option value="overdue">Overdue</option>
-        </select>
-        <select value={filter.category} onChange={(e) => setFilter({ ...filter, category: e.target.value })} className="input-glass py-2 px-4 text-sm w-36">
-          <option value="">All Categories</option>
-          {CATEGORIES.map(c => <option key={c} value={c}>{capitalizeFirst(c)}</option>)}
-        </select>
       </motion.div>
 
       {/* Task List */}
       {loading ? (
-        <div className="flex justify-center py-20">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full" 
-          />
+        <div className="space-y-4">
+          <Skeleton variant="rectangular" className="h-[120px]" />
+          <Skeleton variant="rectangular" className="h-[120px]" />
+          <Skeleton variant="rectangular" className="h-[120px]" />
         </div>
       ) : tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 bg-[var(--surface)] border border-dashed border-[var(--border-color)] rounded-xl text-center">
@@ -128,7 +128,7 @@ export default function Tasks() {
           variants={staggerContainer}
           initial="hidden"
           animate="show"
-          className="space-y-3"
+          className="flex flex-col"
         >
           <AnimatePresence mode="popLayout">
             {tasks.map(task => (
@@ -167,55 +167,54 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
   return (
     <motion.div 
       layout
-      whileHover={{ scale: 1.01, backgroundColor: isCritical ? 'rgba(239, 68, 68, 0.05)' : 'var(--surface-secondary)' }}
-      className={`rounded-xl transition-all duration-300 relative overflow-hidden group ${
-        isCompleted ? 'opacity-60 bg-[var(--surface)] border border-[var(--border-color)] p-4 shadow-sm' 
-        : isCritical ? 'bg-gradient-to-r from-red-500/10 to-[var(--surface)] border border-red-500/30 p-6 shadow-md'
-        : 'bg-[var(--surface)] border border-[var(--border-color)] p-4 shadow-sm'
+      whileHover={{ backgroundColor: 'var(--surface-secondary)' }}
+      className={`transition-colors duration-300 relative group border-b divider-subtle last:border-0 py-6 px-4 ${
+        isCompleted ? 'opacity-60' : ''
       }`}
     >
-      {isCritical && <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500" />}
+      {isCritical && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1/2 w-[3px] bg-red-500 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />}
       
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-5">
         {/* Complete checkbox */}
         <motion.button 
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.8 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={onComplete} 
           disabled={isCompleted} 
-          className={`mt-0.5 flex-shrink-0 cursor-pointer ${isCompleted ? 'text-emerald-500' : 'text-[var(--text-muted)] hover:text-emerald-400'} transition-colors`}
+          className={`mt-1 flex-shrink-0 cursor-pointer ${isCompleted ? 'text-emerald-500' : 'text-[var(--border-color)] hover:text-emerald-400 group-hover:text-[var(--text-muted)]'} transition-colors`}
         >
           <CheckCircle className={isCritical ? "w-6 h-6" : "w-5 h-5"} />
         </motion.button>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h3 className={`${isCritical ? 'text-lg font-semibold' : 'text-[15px] font-medium'} tracking-tight ${isCompleted ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
+          <div className="flex items-baseline gap-3 flex-wrap mb-1">
+            <h3 className={`text-lg font-medium tracking-tight ${isCompleted ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
               {task.title}
             </h3>
             {task.priority_label && (
-              <span className={`priority-${task.priority_label.toLowerCase()}`}>
-                {task.priority_label} {task.priority_score ? `(${task.priority_score})` : ''}
+              <span className={`text-[10px] uppercase font-bold tracking-widest ${
+                isCritical ? 'text-red-500' : task.priority_label === 'High' ? 'text-orange-500' : task.priority_label === 'Medium' ? 'text-yellow-500' : 'text-emerald-500'
+              }`}>
+                {task.priority_label} {task.priority_score ? `[${task.priority_score}]` : ''}
               </span>
             )}
-            <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-[var(--surface-secondary)] text-[var(--text-muted)]">
-              {capitalizeFirst(task.category)}
-            </span>
           </div>
 
-          {task.description && <p className={`${isCritical ? 'text-[13px]' : 'text-xs'} text-[var(--text-secondary)] mt-2 line-clamp-2`}>{task.description}</p>}
+          {task.description && <p className={`text-[14px] text-[var(--text-secondary)] leading-relaxed mb-4 max-w-3xl line-clamp-2`}>{task.description}</p>}
 
-          <div className="flex items-center gap-4 mt-3 text-xs text-[var(--text-muted)] flex-wrap">
+          <div className="flex items-center gap-6 text-[12px] font-medium text-[var(--text-muted)] flex-wrap">
+            <span className="uppercase tracking-widest text-[10px] border border-[var(--border-color)] px-2 py-0.5 rounded-full">{capitalizeFirst(task.category)}</span>
+            
             {task.deadline && (
-              <span className="flex items-center gap-1.5 font-medium">
-                <Clock className="w-3 h-3 flex-shrink-0" /> {formatTimeRemaining(task.deadline)}
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5" /> {formatTimeRemaining(task.deadline)}
               </span>
             )}
-            {task.estimated_hours && <span className="font-medium">{task.estimated_hours}h est.</span>}
+            {task.estimated_hours && <span>{task.estimated_hours}h est.</span>}
             {task.risk_percentage != null && (
-              <span className={`flex items-center gap-1.5 font-bold ${task.risk_percentage >= 70 ? 'text-[var(--danger)]' : task.risk_percentage >= 40 ? 'text-[var(--warning)]' : 'text-emerald-500'}`}>
-                <AlertTriangle className="w-3 h-3 flex-shrink-0" /> {task.risk_percentage}% risk
+              <span className={`flex items-center gap-1.5 ${task.risk_percentage >= 70 ? 'text-[var(--danger)]' : task.risk_percentage >= 40 ? 'text-[var(--warning)]' : 'text-emerald-500'}`}>
+                <AlertTriangle className="w-3.5 h-3.5" /> {task.risk_percentage}% risk
               </span>
             )}
           </div>
@@ -255,15 +254,15 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
           )}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Actions - Appear on hover */}
+        <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
           {!isCompleted && !task.subtasks?.length && (
             <motion.button 
-              whileHover={{ scale: 1.1, backgroundColor: 'rgba(99,102,241,0.1)' }}
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={onBreakdown} 
               disabled={breakdownLoading} 
-              className="p-2 rounded-lg text-[var(--accent-primary)] transition-all cursor-pointer" 
+              className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-colors cursor-pointer border border-transparent hover:border-[var(--accent-highlight)]" 
               title="AI Breakdown"
             >
               {breakdownLoading ? (
@@ -274,10 +273,10 @@ function TaskCard({ task, onDelete, onComplete, onBreakdown, breakdownLoading })
             </motion.button>
           )}
           <motion.button 
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(239,68,68,0.1)' }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onDelete} 
-            className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--danger)] transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:bg-red-500 hover:text-white transition-colors cursor-pointer border border-transparent hover:border-red-400"
           >
             <Trash2 className="w-4 h-4" />
           </motion.button>

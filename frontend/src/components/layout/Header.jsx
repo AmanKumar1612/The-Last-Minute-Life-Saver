@@ -2,6 +2,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Bell, Moon, Sun, Search, Mic } from 'lucide-react';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Header({ onVoiceClick }) {
   const { user } = useAuth();
@@ -33,27 +34,36 @@ export default function Header({ onVoiceClick }) {
 
       {/* Right Actions */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           onClick={onVoiceClick}
           className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)] transition-colors flex-shrink-0 relative group"
           title="Voice Command"
         >
           <Mic className="w-[18px] h-[18px]" />
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           onClick={toggleTheme}
           className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)] transition-colors flex-shrink-0"
         >
           {isDark ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
-        </button>
+        </motion.button>
 
-        <button 
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)] transition-colors relative flex-shrink-0"
         >
           <Bell className="w-[18px] h-[18px]" />
           <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[var(--accent-highlight)] rounded-full" />
-        </button>
+        </motion.button>
 
         <div className="w-px h-6 bg-[var(--border-color)] mx-2" />
 

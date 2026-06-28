@@ -13,10 +13,10 @@ const Button = forwardRef(({
   const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:ring-offset-2 focus:ring-offset-[#0B0D12] disabled:opacity-50 disabled:pointer-events-none";
   
   const variants = {
-    primary: "bg-[var(--text-primary)] text-[var(--background)] hover:bg-[var(--text-secondary)] shadow-sm",
-    secondary: "bg-[var(--surface)] border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]",
+    primary: "bg-[var(--text-primary)] text-[var(--background)] hover:bg-[var(--text-secondary)] shadow-[0_2px_10px_rgba(255,255,255,0.05)] hover:shadow-[0_4px_16px_rgba(255,255,255,0.1)]",
+    secondary: "bg-[var(--surface)] border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--surface-secondary)] shadow-sm hover:shadow-md",
     ghost: "bg-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface)]",
-    danger: "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+    danger: "bg-red-500/10 text-[var(--danger)] hover:bg-red-500/20"
   };
   
   const sizes = {
@@ -28,7 +28,8 @@ const Button = forwardRef(({
   return (
     <motion.button
       ref={ref}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.02, y: -1, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
+      whileTap={{ scale: 0.98, y: 1, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={isLoading}
       {...props}

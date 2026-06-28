@@ -3,6 +3,7 @@ import client from '../api/client';
 import { Target, Plus, Trash2, Sparkles, X, Loader2, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { staggerContainer, fadeUp, cardVariants } from '../lib/motion';
+import Skeleton from '../components/ui/Skeleton';
 
 export default function Goals() {
   const [goals, setGoals] = useState([]);
@@ -56,24 +57,26 @@ export default function Goals() {
       animate="show"
       className="space-y-6"
     >
-      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-8 border-b divider-subtle">
         <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Goals</h1>
-          <p className="text-sm text-[var(--text-muted)] mt-1">Track your long-term goals with AI milestones</p>
+          <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight mb-2">Objectives</h1>
+          <p className="text-[var(--text-muted)] text-sm">Strategic direction and long-term targets.</p>
         </div>
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowForm(true)} 
-          className="btn-primary flex items-center gap-2 text-sm"
+          className="text-[13px] font-medium text-[var(--background)] bg-[var(--text-primary)] hover:opacity-90 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors shadow-lg shadow-white/5"
         >
-          <Plus className="w-4 h-4" /> New Goal
+          <Plus className="w-3.5 h-3.5" /> New Objective
         </motion.button>
       </motion.div>
 
       {loading ? (
-        <div className="flex justify-center py-20">
-          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full" />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <Skeleton variant="rectangular" className="md:col-span-12 lg:col-span-8 h-[250px]" />
+          <Skeleton variant="rectangular" className="md:col-span-6 lg:col-span-4 h-[250px]" />
+          <Skeleton variant="rectangular" className="md:col-span-6 lg:col-span-4 h-[250px]" />
         </div>
       ) : goals.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 bg-[var(--surface)] border border-dashed border-[var(--border-color)] rounded-xl text-center">
@@ -97,15 +100,16 @@ export default function Goals() {
                   index === 0 ? 'md:col-span-12 lg:col-span-8' : 'md:col-span-6 lg:col-span-4'
                 }`}
               >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
                 {index === 0 && (
-                  <div className="absolute right-0 top-0 w-64 h-64 bg-[var(--accent-primary)]/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none group-hover:bg-[var(--accent-primary)]/10 transition-colors" />
+                  <div className="absolute right-0 top-0 w-64 h-64 bg-[var(--text-primary)]/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none group-hover:bg-[var(--text-primary)]/10 transition-colors" />
                 )}
                 
-                <div className="flex items-start justify-between mb-5 relative z-10">
+                <div className="flex items-start justify-between mb-8 relative z-10">
                   <div>
-                    {index === 0 && <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2">Primary Focus</p>}
-                    <h3 className={`font-semibold text-[var(--text-primary)] tracking-tight transition-colors ${index === 0 ? 'text-2xl' : 'text-[15px]'}`}>{goal.title}</h3>
-                    {goal.description && <p className={`text-[var(--text-muted)] mt-2 ${index === 0 ? 'text-sm' : 'text-xs'}`}>{goal.description}</p>}
+                    {index === 0 && <p className="label-micro mb-3">Primary Focus</p>}
+                    <h3 className={`font-light text-[var(--text-primary)] tracking-tight transition-colors ${index === 0 ? 'text-4xl' : 'text-2xl'}`}>{goal.title}</h3>
+                    {goal.description && <p className={`text-[var(--text-secondary)] mt-3 ${index === 0 ? 'text-base max-w-xl' : 'text-[13px] line-clamp-2'}`}>{goal.description}</p>}
                   </div>
                   <div className="flex items-center gap-1">
                     {!goal.milestones?.length && (
@@ -136,36 +140,36 @@ export default function Goals() {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mb-6 mt-auto relative z-10">
-                  <div className="flex items-end justify-between mb-2">
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Progress</span>
-                    <span className={`text-[var(--accent-primary)] font-light tracking-tighter ${index === 0 ? 'text-4xl' : 'text-xl'}`}>{goal.progress || 0}%</span>
+                <div className="mb-8 mt-auto relative z-10">
+                  <div className="flex items-end justify-between mb-3">
+                    <span className="label-micro">Progress</span>
+                    <span className={`text-[var(--text-primary)] font-light tracking-tighter ${index === 0 ? 'text-5xl' : 'text-3xl'}`}>{goal.progress || 0}<span className="text-[var(--text-muted)] text-xl ml-1">%</span></span>
                   </div>
-                  <div className={`w-full bg-[var(--surface-secondary)] rounded-full overflow-hidden ${index === 0 ? 'h-2' : 'h-1.5'}`}>
+                  <div className={`w-full bg-[var(--surface-secondary)] overflow-hidden ${index === 0 ? 'h-1' : 'h-[1px]'}`}>
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${goal.progress || 0}%` }}
                       transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="h-full bg-[var(--accent-primary)] rounded-full" 
+                      className="h-full bg-[var(--text-primary)]" 
                     />
                   </div>
                 </div>
 
                 {/* Milestones */}
                 {goal.milestones?.length > 0 && (
-                  <div className="space-y-2 relative z-10">
-                    <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3">Milestones</p>
-                    <div className={index === 0 ? "grid grid-cols-1 md:grid-cols-2 gap-2" : "space-y-2"}>
+                  <div className="space-y-3 relative z-10 border-t divider-subtle pt-6 mt-2">
+                    <p className="label-micro">Key Milestones</p>
+                    <div className={index === 0 ? "grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2" : "space-y-2"}>
                       {goal.milestones.map((m, i) => (
                         <motion.button 
-                          whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }}
+                          whileHover={{ x: 4 }}
                           whileTap={{ scale: 0.98 }}
                           key={i} 
                           onClick={() => toggleMilestone(goal.id, i)} 
-                          className="flex items-center gap-3 w-full text-left p-2.5 rounded-lg border border-transparent hover:border-[var(--border-color)] transition-all cursor-pointer group"
+                          className="flex items-center gap-3 w-full text-left py-2 border-b border-transparent hover:border-[var(--border-color)] transition-all cursor-pointer group"
                         >
                           <motion.div whileHover={{ scale: 1.2 }}>
-                            <CheckCircle className={`w-4 h-4 flex-shrink-0 transition-colors ${m.completed ? 'text-emerald-500' : 'text-[var(--text-muted)] group-hover:text-[var(--accent-highlight)]'}`} />
+                            <CheckCircle className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${m.completed ? 'text-emerald-500' : 'text-[var(--text-muted)] group-hover:text-[var(--text-primary)]'}`} />
                           </motion.div>
                           <span className={`text-[13px] font-medium transition-colors ${m.completed ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]'}`}>{m.title}</span>
                         </motion.button>

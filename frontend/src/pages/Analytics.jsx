@@ -3,7 +3,8 @@ import client from '../api/client';
 import { BarChart3, TrendingUp, Clock, AlertTriangle, Target, Flame } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, RadialBarChart, RadialBar } from 'recharts';
 import { motion, animate, useMotionValue, useTransform } from 'framer-motion';
-import { staggerContainer, fadeUp, cardVariants, hoverLift } from '../lib/motion';
+import { staggerContainer, fadeUp, cardVariants, hoverLift, viewportChart, editorialReveal } from '../lib/motion';
+import Skeleton from '../components/ui/Skeleton';
 
 const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#f5576c'];
 
@@ -32,8 +33,18 @@ export default function Analytics() {
   }, []);
 
   if (loading) return (
-    <div className="flex justify-center py-20">
-      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-10 h-10 border-4 border-blue-600/30 border-t-blue-600 rounded-full" />
+    <div className="space-y-6">
+      <Skeleton variant="rectangular" className="w-[200px] h-8 mb-2" />
+      <Skeleton variant="rectangular" className="w-[300px] h-4 mb-8" />
+      <div className="flex flex-col lg:flex-row gap-6">
+        <Skeleton variant="rectangular" className="lg:w-1/3 h-[200px]" />
+        <div className="lg:w-2/3 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <Skeleton variant="rectangular" className="h-[200px]" />
+          <Skeleton variant="rectangular" className="h-[200px]" />
+          <Skeleton variant="rectangular" className="h-[200px]" />
+          <Skeleton variant="rectangular" className="h-[200px]" />
+        </div>
+      </div>
     </div>
   );
   if (!data) return <div className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-12 text-center text-[var(--text-muted)] shadow-sm">No analytics data yet. Complete some tasks first!</div>;
@@ -52,148 +63,144 @@ export default function Analytics() {
       animate="show"
       className="space-y-6"
     >
-      <motion.div variants={fadeUp} className="mb-8">
-        <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Analytics</h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">Your productivity insights</p>
+      <motion.div variants={editorialReveal} className="mb-12">
+        <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight">Analytics</h1>
+        <p className="text-[var(--text-muted)] mt-2">Operational intelligence and throughput.</p>
       </motion.div>
 
-      {/* Asymmetrical Stats Row */}
-      <motion.div variants={fadeUp} className="flex flex-col lg:flex-row gap-6">
+      {/* Asymmetrical Stats Row - Borderless */}
+      <motion.div variants={fadeUp} className="flex flex-col lg:flex-row border-y divider-subtle mb-16">
         {/* Hero Stat */}
-        <div className="lg:w-1/3 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-8 shadow-sm flex flex-col justify-center relative overflow-hidden group">
-          <div className="absolute right-0 bottom-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mb-10 transition-colors group-hover:bg-emerald-500/10 pointer-events-none" />
-          <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-4">Overall Completion</p>
-          <div className="flex items-end gap-3 relative z-10">
-            <p className="text-7xl font-light text-[var(--text-primary)] tracking-tighter">
-              <AnimatedNumber value={overview.completion_rate || 0} />%
+        <div className="lg:w-1/3 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r divider-subtle flex flex-col justify-center relative overflow-hidden group">
+          <div className="absolute right-0 bottom-0 w-64 h-64 bg-[var(--accent-primary)]/5 rounded-full blur-3xl -mr-10 -mb-10 transition-colors group-hover:bg-[var(--accent-primary)]/10 pointer-events-none" />
+          <p className="label-micro mb-4">Overall Completion</p>
+          <div className="flex items-baseline gap-2 relative z-10">
+            <p className="text-editorial-hero text-[var(--text-primary)] -ml-1">
+              <AnimatedNumber value={overview.completion_rate || 0} />
             </p>
-            <TrendingUp className="w-8 h-8 text-emerald-500 mb-2" />
+            <span className="text-3xl lg:text-5xl text-[var(--text-muted)]">%</span>
           </div>
         </div>
 
-        {/* Secondary Stats Grid */}
-        <div className="lg:w-2/3 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <MiniStat icon={<Clock />} label="Focus Hours" value={data.focus_hours?.this_week || 0} suffix="h" color="text-blue-500" />
-          <MiniStat icon={<AlertTriangle />} label="Missed" value={data.missed_deadlines || 0} color="text-[var(--danger)]" />
-          <MiniStat icon={<Flame />} label="Day Streak" value={overview.streak_days || 0} color="text-orange-500" />
-          <MiniStat icon={<Target />} label="Total Tasks" value={overview.total_tasks || 0} color="text-[var(--accent-primary)]" />
+        {/* Secondary Stats Row */}
+        <div className="lg:w-2/3 flex flex-col sm:flex-row">
+          <MiniStat icon={<Clock />} label="Focus Hours" value={data.focus_hours?.this_week || 0} suffix="h" />
+          <MiniStat icon={<AlertTriangle />} label="Missed" value={data.missed_deadlines || 0} />
+          <MiniStat icon={<Flame />} label="Day Streak" value={overview.streak_days || 0} />
+          <MiniStat icon={<Target />} label="Total Tasks" value={overview.total_tasks || 0} />
         </div>
       </motion.div>
 
       {/* Primary Charts (70/30 Split) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <motion.div variants={viewportChart} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
         {/* Weekly Productivity (70%) */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6 flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-[var(--accent-highlight)]" /> Weekly Productivity
-          </h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={data.weekly_productivity || []}>
-              <defs>
-                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--accent-primary)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="var(--accent-primary)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="day" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <Tooltip cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} contentStyle={{ background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }} />
-              <Area type="monotone" dataKey="tasks_completed" stroke="var(--accent-primary)" fill="url(#areaGrad)" strokeWidth={2} animationDuration={2000} />
-            </AreaChart>
-          </ResponsiveContainer>
+        <motion.div className="lg:col-span-8 flex flex-col">
+          <h2 className="label-micro mb-8">Weekly Productivity</h2>
+          <div className="w-full h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data.weekly_productivity || []}>
+                <defs>
+                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--text-primary)" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="var(--text-primary)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} dy={10} />
+                <Tooltip cursor={{ stroke: 'rgba(255,255,255,0.05)', strokeWidth: 1 }} contentStyle={{ background: 'var(--background)', border: '1px solid var(--border-color)', borderRadius: '0', color: 'var(--text-primary)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} />
+                <Area type="monotone" dataKey="tasks_completed" stroke="var(--text-primary)" fill="url(#areaGrad)" strokeWidth={2} animationDuration={2000} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </motion.div>
 
         {/* Completion Rate Pie (30%) */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-4 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6">Completion Breakdown</h2>
-          <div className="flex-1 min-h-[200px]">
+        <motion.div className="lg:col-span-4 flex flex-col">
+          <h2 className="label-micro mb-8">Completion Breakdown</h2>
+          <div className="flex-1 min-h-[250px] relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={completionData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value" animationDuration={1500}>
-                  {completionData.map((_, i) => <Cell key={i} fill={['#10b981', '#3b82f6', '#ef4444'][i]} />)}
+                <Pie data={completionData} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={2} dataKey="value" animationDuration={1500} stroke="none">
+                  {completionData.map((_, i) => <Cell key={i} fill={['var(--text-primary)', 'var(--text-secondary)', 'var(--surface-secondary)'][i]} />)}
                 </Pie>
-                <Tooltip contentStyle={{ background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }} />
+                <Tooltip contentStyle={{ background: 'var(--background)', border: '1px solid var(--border-color)', borderRadius: '0', color: 'var(--text-primary)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex justify-center gap-4 mt-4">
+          <div className="flex flex-col gap-3 mt-8">
             {completionData.map((item, i) => (
-              <motion.div whileHover={{ scale: 1.05 }} key={i} className="flex flex-col items-center gap-1 text-[13px] cursor-pointer">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: ['#10b981', '#3b82f6', '#ef4444'][i] }} />
-                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">{item.name}</span>
-              </motion.div>
+              <div key={i} className="flex items-center justify-between py-2 border-b divider-subtle last:border-0 group cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full" style={{ background: ['var(--text-primary)', 'var(--text-secondary)', 'var(--surface-secondary)'][i] }} />
+                  <span className="text-[13px] font-medium text-[var(--text-primary)] group-hover:opacity-70 transition-opacity">{item.name}</span>
+                </div>
+                <span className="text-[13px] text-[var(--text-muted)] font-mono">{item.value}</span>
+              </div>
             ))}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Secondary Charts (30/70 Split) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <motion.div variants={viewportChart} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24 border-t divider-subtle pt-16">
         {/* Category Distribution (30%) */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-4 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6">Tasks by Category</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={data.category_distribution || []} layout="vertical">
-              <XAxis type="number" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis dataKey="category" type="category" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} width={80} />
-              <Tooltip cursor={{ fill: 'rgba(255,255,255,0.02)' }} contentStyle={{ background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }} />
-              <Bar dataKey="count" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} animationDuration={1500} />
-            </BarChart>
-          </ResponsiveContainer>
+        <motion.div className="lg:col-span-5 flex flex-col">
+          <h2 className="label-micro mb-8">Tasks by Category</h2>
+          <div className="w-full h-[250px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.category_distribution || []} layout="vertical">
+                <XAxis type="number" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis dataKey="category" type="category" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} width={80} />
+                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.02)' }} contentStyle={{ background: 'var(--background)', border: '1px solid var(--border-color)', borderRadius: '0', color: 'var(--text-primary)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} />
+                <Bar dataKey="count" fill="var(--text-secondary)" radius={[0, 2, 2, 0]} animationDuration={1500} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </motion.div>
 
         {/* Goal Progress (70%) */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6 flex items-center gap-2">
-            <Target className="w-4 h-4 text-emerald-500" /> Active Goals
-          </h2>
+        <motion.div className="lg:col-span-7 flex flex-col">
+          <h2 className="label-micro mb-8">Active Goals Overview</h2>
           {(data.goal_progress || []).length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-[200px] bg-[var(--surface-secondary)]/30 border border-dashed border-[var(--border-color)] rounded-xl text-center">
-              <p className="text-[13px] text-[var(--text-muted)]">No goals tracked yet</p>
+            <div className="flex flex-col items-start justify-center flex-1">
+              <p className="text-[14px] text-[var(--text-muted)] italic">No active objectives.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-[250px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="flex flex-col pr-2 custom-scrollbar">
               {data.goal_progress.map(goal => (
-                <motion.div whileHover={{ scale: 1.02 }} key={goal.id} className="cursor-pointer bg-[var(--background)] border border-[var(--border-color)] p-4 rounded-xl flex flex-col justify-center">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[13px] font-medium text-[var(--text-primary)] truncate mr-2">{goal.title}</span>
-                    <span className="text-xs text-[var(--text-muted)] font-bold"><AnimatedNumber value={goal.progress} />%</span>
+                <div key={goal.id} className="cursor-pointer py-4 border-b divider-subtle last:border-0 group">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[15px] font-medium text-[var(--text-primary)] group-hover:text-[var(--text-muted)] transition-colors truncate mr-2">{goal.title}</span>
+                    <span className="label-micro"><AnimatedNumber value={goal.progress} />%</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[var(--surface-secondary)] rounded-full overflow-hidden">
+                  <div className="w-full h-[1px] bg-[var(--surface-secondary)] overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${goal.progress}%` }}
                       transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="h-full bg-[var(--text-secondary)] rounded-full" 
+                      className="h-full bg-[var(--text-primary)]" 
                     />
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
         </motion.div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
 
-function MiniStat({ icon, label, value, suffix = '', color }) {
+function MiniStat({ icon, label, value, suffix = '' }) {
   return (
-    <motion.div 
-      variants={hoverLift}
-      initial="rest"
-      whileHover="hover"
-      className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-4 cursor-pointer shadow-sm flex flex-col justify-between h-full"
-    >
-      <div className="flex items-center justify-between mb-3">
-        <span className={`text-[13px] font-medium text-[var(--text-muted)]`}>{label}</span>
-        <motion.span whileHover={{ scale: 1.1 }} className={`w-4 h-4 ${color} transition-colors flex-shrink-0`}>{icon}</motion.span>
+    <div className="p-6 lg:p-8 border-b sm:border-b-0 sm:border-r last:border-r-0 divider-subtle flex flex-col justify-between flex-1 group hover:bg-[var(--surface-secondary)] transition-colors">
+      <div className="flex justify-between items-start mb-6">
+        <span className="label-micro">{label}</span>
       </div>
       <div>
-        <p className="text-xl font-semibold text-[var(--text-primary)] tracking-tight transition-colors duration-300">
-          <AnimatedNumber value={value} />{suffix}
+        <p className="text-4xl font-light text-[var(--text-primary)] tracking-tighter transition-colors duration-300">
+          <AnimatedNumber value={value} /><span className="text-[var(--text-muted)] text-lg ml-0.5">{suffix}</span>
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

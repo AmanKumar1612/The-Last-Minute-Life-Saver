@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { User, Moon, Sun, Bell, Calendar, Shield, Save, Loader2 } from 'lucide-react';
+import { User, Moon, Sun, Bell, Calendar, Shield, Save, Loader2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { staggerContainer, fadeUp, cardVariants } from '../lib/motion';
 
@@ -43,38 +43,42 @@ export default function Settings() {
       animate="show"
       className="space-y-6 max-w-2xl"
     >
-      <motion.div variants={fadeUp} className="mb-8">
-        <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">Settings</h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">Manage your account and preferences</p>
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-8 border-b divider-subtle mb-12">
+        <div>
+          <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight mb-2">Settings</h1>
+          <p className="text-[var(--text-muted)] text-sm">Account configuration and preferences.</p>
+        </div>
       </motion.div>
 
       {/* Profile */}
-      <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-        <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
-          <User className="w-[18px] h-[18px] text-[var(--accent-highlight)] flex-shrink-0" /> Profile
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Name</label>
-            <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-premium w-full" />
+      <motion.div className="flex flex-col mb-12">
+        <h2 className="label-micro mb-8">Personal Information</h2>
+        
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3 block">Full Name</label>
+              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-glass w-full text-[14px] py-3 bg-[var(--background)]" />
+            </div>
+            <div>
+              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3 block">Email Address</label>
+              <input type="email" value={user?.email || ''} className="input-glass w-full text-[14px] py-3 opacity-50 cursor-not-allowed bg-[var(--background)]" disabled />
+            </div>
+            <div className="md:col-span-2">
+              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3 block">Profession / Role</label>
+              <input type="text" value={form.profession} onChange={(e) => setForm({ ...form, profession: e.target.value })} className="input-glass w-full text-[14px] py-3 bg-[var(--background)]" placeholder="Student, Developer, etc." />
+            </div>
           </div>
-          <div>
-            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Email</label>
-            <input type="email" value={user?.email || ''} className="input-premium w-full opacity-50 cursor-not-allowed" disabled />
-          </div>
-          <div>
-            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Profession</label>
-            <input type="text" value={form.profession} onChange={(e) => setForm({ ...form, profession: e.target.value })} className="input-premium w-full" placeholder="Student, Developer, etc." />
-          </div>
-          <div>
-            <label className="text-[13px] font-medium text-[var(--text-muted)] mb-1 block">Productivity Goals</label>
-            <div className="flex gap-2 mb-3">
-              <input type="text" value={goalInput} onChange={(e) => setGoalInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addGoal())} className="input-premium flex-1" placeholder="Add a goal" />
+
+          <div className="pt-4">
+            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-3 block">Productivity Goals</label>
+            <div className="flex gap-3 mb-4">
+              <input type="text" value={goalInput} onChange={(e) => setGoalInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addGoal())} className="input-glass flex-1 text-[14px] py-3 bg-[var(--background)]" placeholder="What are you striving for?" />
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={addGoal} 
-                className="btn-secondary text-sm px-4 cursor-pointer"
+                className="text-[13px] font-medium text-[var(--background)] bg-[var(--text-primary)] hover:opacity-90 px-6 rounded-lg transition-colors shadow-lg shadow-white/5"
               >
                 Add
               </motion.button>
@@ -88,105 +92,99 @@ export default function Settings() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     key={i} 
-                    className="bg-[var(--surface-secondary)] text-[var(--text-secondary)] px-3 py-1 rounded border border-[var(--border-color)] text-xs flex items-center gap-1"
+                    className="bg-[var(--surface-secondary)] text-[var(--text-secondary)] px-3 py-1.5 rounded-full border border-[var(--border-color)] text-[12px] flex items-center gap-2 group transition-colors"
                   >
                     {g} 
                     <motion.button 
-                      whileHover={{ scale: 1.2, color: '#ef4444' }}
+                      whileHover={{ scale: 1.2 }}
                       onClick={() => removeGoal(i)} 
-                      className="cursor-pointer text-[var(--text-muted)] hover:text-red-400"
+                      className="cursor-pointer text-[var(--text-muted)] hover:text-red-400 opacity-50 group-hover:opacity-100 transition-opacity"
                     >
-                      ×
+                      <X className="w-3 h-3" />
                     </motion.button>
                   </motion.span>
                 ))}
               </AnimatePresence>
             </motion.div>
           </div>
-          <motion.button 
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSave} 
-            disabled={saving} 
-            className={`btn-primary flex items-center justify-center gap-2 mt-6 w-full sm:w-auto ${saved ? 'bg-green-500 hover:bg-green-600 border-green-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : ''}`}
-          >
-            {saving ? (
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
-                <Loader2 className="w-4 h-4" />
-              </motion.div>
-            ) : <Save className="w-4 h-4" />}
-            {saved ? 'Saved ✓' : saving ? 'Saving...' : 'Save Changes'}
-          </motion.button>
-        </div>
-      </motion.div>
-
-      {/* Appearance */}
-      <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-        <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
-          <motion.div
-            initial={false}
-            animate={{ rotate: isDark ? -180 : 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 10 }}
-          >
-            {isDark ? <Moon className="w-5 h-5 text-blue-400" /> : <Sun className="w-5 h-5 text-yellow-400" />}
-          </motion.div>
-          Appearance
-        </h2>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[13px] font-medium text-[var(--text-primary)]">Theme Mode</p>
-            <p className="text-xs text-[var(--text-muted)] mt-0.5">Toggle between dark and light theme</p>
+          
+          <div className="pt-4">
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSave} 
+              disabled={saving} 
+              className={`text-[14px] font-medium px-8 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${saved ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20'}`}
+            >
+              {saving ? (
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                  <Loader2 className="w-4 h-4" />
+                </motion.div>
+              ) : <Save className="w-4 h-4" />}
+              {saved ? 'Saved ✓' : saving ? 'Saving...' : 'Save Profile'}
+            </motion.button>
           </div>
-          <motion.button 
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={toggleTheme} 
-            className={`w-12 h-6 rounded-full relative transition-colors duration-300 ${isDark ? 'bg-[var(--accent-primary)] shadow-[0_0_10px_rgba(37,99,235,0.5)]' : 'bg-slate-600'}`}
-          >
-            <motion.div 
-              layout
-              className="w-5 h-5 rounded-full bg-white absolute top-0.5"
-              initial={false}
-              animate={{ left: isDark ? '24px' : '2px' }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          </motion.button>
         </div>
       </motion.div>
 
-      {/* Integrations */}
-      <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-        <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
-          <Calendar className="w-[18px] h-[18px] text-[var(--success)] flex-shrink-0" /> Integrations
-        </h2>
-        <div className="space-y-3">
-          <motion.div whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }} className="flex items-center justify-between p-3 rounded-lg bg-[var(--background)] transition-colors border border-[var(--border-color)]">
+      {/* Preferences & Integrations */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 pt-8 border-t divider-subtle">
+        {/* Appearance */}
+        <motion.div className="flex flex-col">
+          <h2 className="label-micro mb-6">Interface</h2>
+          <div className="flex items-center justify-between py-4 border-b divider-subtle last:border-0">
             <div>
-              <p className="text-[13px] font-medium text-[var(--text-primary)]">Google Calendar</p>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">Connect for smart scheduling</p>
+              <p className="text-[14px] font-medium text-[var(--text-primary)]">Theme Mode</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1">Toggle dark and light aesthetics</p>
             </div>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn-secondary text-sm">Connect</motion.button>
-          </motion.div>
-          <motion.div whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }} className="flex items-center justify-between p-3 rounded-lg bg-[var(--background)] transition-colors border border-[var(--border-color)]">
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={toggleTheme} 
+              className={`w-12 h-6 rounded-full relative transition-colors duration-300 ${isDark ? 'bg-[var(--text-primary)]' : 'bg-[var(--surface-secondary)] border border-[var(--border-color)]'}`}
+            >
+              <motion.div 
+                layout
+                className={`w-4 h-4 rounded-full absolute top-1 ${isDark ? 'bg-[var(--background)]' : 'bg-[var(--text-primary)]'}`}
+                initial={false}
+                animate={{ left: isDark ? '28px' : '4px' }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              />
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Integrations */}
+        <motion.div className="flex flex-col">
+          <h2 className="label-micro mb-6">Connections</h2>
+          <div className="flex items-center justify-between py-4 border-b divider-subtle last:border-0 group">
             <div>
-              <p className="text-[13px] font-medium text-[var(--text-primary)]">Push Notifications</p>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">Get context-aware reminders</p>
+              <p className="text-[14px] font-medium text-[var(--text-primary)]">Google Calendar</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1">Sync your schedule</p>
             </div>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn-secondary text-sm">Enable</motion.button>
-          </motion.div>
-        </div>
-      </motion.div>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-[12px] font-medium px-4 py-1.5 rounded-full border border-[var(--border-color)] hover:border-[var(--text-primary)] transition-colors">Connect</motion.button>
+          </div>
+          <div className="flex items-center justify-between py-4 border-b divider-subtle last:border-0 group">
+            <div>
+              <p className="text-[14px] font-medium text-[var(--text-primary)]">Push Notifications</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1">Context-aware alerts</p>
+            </div>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-[12px] font-medium px-4 py-1.5 rounded-full border border-[var(--border-color)] hover:border-[var(--text-primary)] transition-colors">Enable</motion.button>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Danger Zone */}
-      <motion.div variants={fadeUp} className="bg-red-500/5 border border-red-500/20 rounded-xl p-6 shadow-sm">
-        <h2 className="text-[15px] font-semibold text-[var(--danger)] tracking-tight mb-5 flex items-center gap-2">
-          <Shield className="w-[18px] h-[18px]" /> Account
-        </h2>
+      <motion.div variants={fadeUp} className="pt-12 mt-12 border-t divider-subtle flex items-center justify-between">
+        <div>
+          <h2 className="label-micro text-red-500 mb-2">Danger Zone</h2>
+          <p className="text-xs text-[var(--text-muted)]">Log out of your current session.</p>
+        </div>
         <motion.button 
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={logout} 
-          className="btn-danger text-sm"
+          className="text-[13px] font-medium text-red-500 hover:text-white border border-red-500/30 hover:bg-red-500 px-6 py-2 rounded-lg transition-colors"
         >
           Sign Out
         </motion.button>

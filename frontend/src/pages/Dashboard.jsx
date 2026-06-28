@@ -4,8 +4,9 @@ import client from '../api/client';
 import { CheckCircle2, Clock, AlertTriangle, TrendingUp, Zap, Brain, BarChart3 } from 'lucide-react';
 import { formatTimeRemaining, formatDate } from '../utils/helpers';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { motion, animate, useMotionValue, useTransform } from 'framer-motion';
-import { staggerContainer, fadeUp, cardVariants, hoverLift } from '../lib/motion';
+import { motion, animate, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { staggerContainer, fadeUp, cardVariants, hoverLift, viewportChart, editorialReveal } from '../lib/motion';
+import Skeleton from '../components/ui/Skeleton';
 
 function AnimatedNumber({ value }) {
   const count = useMotionValue(0);
@@ -66,17 +67,17 @@ export default function Dashboard() {
     .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
     .slice(0, 5);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-blue-600/30 border-t-blue-600 rounded-full" 
-        />
+  if (loading) return (
+    <div className="space-y-6">
+      <Skeleton variant="rectangular" className="w-[200px] h-8 mb-2" />
+      <Skeleton variant="rectangular" className="w-[300px] h-4 mb-8" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <Skeleton variant="rectangular" className="lg:col-span-4 lg:row-span-2 h-[400px]" />
+        <Skeleton variant="rectangular" className="lg:col-span-8 h-[200px]" />
+        <Skeleton variant="rectangular" className="lg:col-span-8 h-[200px]" />
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
     <motion.div 
@@ -86,248 +87,195 @@ export default function Dashboard() {
       className="space-y-6"
     >
       {/* Greeting */}
-      <motion.div variants={fadeUp} className="mb-8">
-        <h1 className="text-xl font-semibold text-[var(--text-primary)] tracking-tight">
+      <motion.div variants={editorialReveal} className="mb-12">
+        <h1 className="text-3xl font-light text-[var(--text-primary)] tracking-tight">
           Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'},{' '}
-          <span className="text-[var(--accent-primary)]">{user?.name?.split(' ')[0] || 'there'}</span> 👋
+          <span className="font-medium">{user?.name?.split(' ')[0] || 'there'}</span>.
         </h1>
-        <p className="text-[var(--text-muted)] text-sm mt-1">Here's your productivity overview</p>
+        <p className="text-[var(--text-muted)] mt-2">Here is your operational overview.</p>
       </motion.div>
 
-      {/* Asymmetrical Stats Bento */}
-      <motion.div variants={fadeUp} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Asymmetrical Stats Bento - Borderless */}
+      <motion.div variants={fadeUp} className="grid grid-cols-1 lg:grid-cols-3 gap-0 border-y divider-subtle mb-16">
         {/* Hero Stat */}
-        <div className="lg:col-span-2 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-8 flex flex-col justify-between shadow-sm relative overflow-hidden group">
-          <div className="absolute right-0 top-0 w-64 h-64 bg-[var(--accent-primary)]/5 rounded-full blur-3xl -mr-20 -mt-20 transition-all duration-700 group-hover:bg-[var(--accent-primary)]/10" />
-          <div className="relative z-10 flex items-start justify-between">
-            <div>
-              <p className="text-xs font-medium text-[var(--text-muted)] mb-2 uppercase tracking-widest">Productivity Score</p>
-              <p className="text-6xl font-light text-[var(--text-primary)] tracking-tighter">
-                <AnimatedNumber value={overview.completion_rate || 0} />%
-              </p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-[var(--accent-highlight)]" />
-            </div>
+        <div className="lg:col-span-2 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r divider-subtle flex flex-col justify-between relative overflow-hidden group">
+          <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-[var(--accent-primary)]/5 rounded-full blur-3xl -mr-40 -mt-40 transition-all duration-700 group-hover:bg-[var(--accent-primary)]/10" />
+          <div className="relative z-10 flex flex-col items-start h-full justify-center">
+            <p className="label-micro mb-4">Productivity Score</p>
+            <p className="text-editorial-hero text-[var(--text-primary)] -ml-1">
+              <AnimatedNumber value={overview.completion_rate || 0} /><span className="text-3xl lg:text-5xl text-[var(--text-muted)] ml-1">%</span>
+            </p>
           </div>
-          <div className="relative z-10 mt-10 flex items-center gap-8 text-sm">
-            <div className="flex items-center gap-2 text-[var(--text-secondary)]"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> <span className="font-medium text-[var(--text-primary)]">{overview.completed_tasks || 0}</span> Completed</div>
-            <div className="flex items-center gap-2 text-[var(--text-secondary)]"><Clock className="w-4 h-4 text-blue-500" /> <span className="font-medium text-[var(--text-primary)]">{overview.pending_tasks || 0}</span> Pending</div>
+          <div className="relative z-10 mt-12 flex items-center gap-12 text-sm">
+            <div className="flex flex-col gap-1 text-[var(--text-secondary)]"><span className="label-micro">Completed</span> <span className="font-medium text-xl text-[var(--text-primary)]">{overview.completed_tasks || 0}</span></div>
+            <div className="flex flex-col gap-1 text-[var(--text-secondary)]"><span className="label-micro">Pending</span> <span className="font-medium text-xl text-[var(--text-primary)]">{overview.pending_tasks || 0}</span></div>
           </div>
         </div>
 
         {/* Secondary Stats Vertical Stack */}
-        <div className="flex flex-col gap-6">
-          <div className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex items-center justify-between flex-1 group">
-            <div>
-              <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-1">Focus Hours</p>
-              <p className="text-3xl font-light text-[var(--text-primary)]"><AnimatedNumber value={analytics?.focus_hours?.this_week || 0} />h</p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center transition-colors group-hover:bg-blue-500/10">
-              <Zap className="w-4 h-4 text-blue-500" />
+        <div className="flex flex-col">
+          <div className="p-8 lg:p-12 border-b divider-subtle flex flex-col justify-center flex-1 group hover:bg-[var(--surface-secondary)] transition-colors">
+            <div className="flex justify-between items-start w-full">
+              <div>
+                <p className="label-micro mb-2">Focus Hours</p>
+                <p className="text-5xl font-light text-[var(--text-primary)] tracking-tighter"><AnimatedNumber value={analytics?.focus_hours?.this_week || 0} /><span className="text-xl text-[var(--text-muted)] ml-1">h</span></p>
+              </div>
             </div>
           </div>
-          <div className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex items-center justify-between flex-1 group">
-            <div>
-              <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-1">Overdue</p>
-              <p className="text-3xl font-light text-[var(--danger)]"><AnimatedNumber value={overview.overdue_tasks || 0} /></p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center transition-colors group-hover:bg-red-500/10">
-              <AlertTriangle className="w-4 h-4 text-[var(--danger)]" />
+          <div className="p-8 lg:p-12 flex flex-col justify-center flex-1 group hover:bg-[var(--surface-secondary)] transition-colors">
+            <div className="flex justify-between items-start w-full">
+              <div>
+                <p className="label-micro mb-2">Overdue Tasks</p>
+                <p className="text-5xl font-light text-[var(--danger)] tracking-tighter"><AnimatedNumber value={overview.overdue_tasks || 0} /></p>
+              </div>
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Main Bento Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* AI Insights - Vertical spanning */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-4 lg:row-span-2 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6 flex items-center gap-2">
-            <Brain className="w-4 h-4 text-[var(--accent-primary)]" /> AI Coach
-          </h2>
+      {/* Main Grid - Borderless layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
+        {/* AI Insights - Editorial Pull Quote */}
+        <motion.div variants={fadeUp} className="lg:col-span-5 flex flex-col relative">
+          <h2 className="label-micro mb-8">AI Intelligence</h2>
           {aiInsights?.coaching ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 flex-1">
-              <p className="text-[15px] text-[var(--text-primary)] leading-relaxed font-light">"{aiInsights.coaching.nudge}"</p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 flex-1">
+              <p className="text-2xl lg:text-3xl text-[var(--text-primary)] leading-tight font-light italic tracking-tight text-balance">
+                "{aiInsights.coaching.nudge}"
+              </p>
               
               {aiInsights.coaching.focus_suggestion && (
-                <div className="bg-[var(--surface-secondary)] rounded-xl p-4 border border-[var(--border-color)]">
-                  <p className="text-xs font-semibold text-[var(--accent-highlight)] mb-1 uppercase tracking-wider">{aiInsights.coaching.focus_suggestion.technique}</p>
-                  <p className="text-[13px] text-[var(--text-secondary)]">{aiInsights.coaching.focus_suggestion.description}</p>
+                <div className="pl-6 border-l-2 divider-subtle mt-8">
+                  <p className="label-micro mb-2">{aiInsights.coaching.focus_suggestion.technique}</p>
+                  <p className="text-[14px] leading-relaxed text-[var(--text-secondary)]">{aiInsights.coaching.focus_suggestion.description}</p>
                 </div>
               )}
 
               {aiInsights.coaching.micro_tasks && (
-                <div className="mt-auto pt-6 border-t border-[var(--border-color)]">
-                  <p className="text-[10px] text-[var(--text-muted)] mb-3 font-bold uppercase tracking-widest">Suggested Micro-Tasks</p>
-                  <ul className="space-y-3">
+                <div className="mt-8 pt-8 border-t divider-subtle">
+                  <p className="label-micro mb-6">Suggested Actions</p>
+                  <ul className="space-y-4">
                     {aiInsights.coaching.micro_tasks.slice(0, 3).map((task, i) => (
-                      <motion.li 
-                        whileHover={{ x: 4, color: 'var(--text-primary)' }}
-                        key={i} 
-                        className="text-[13px] text-[var(--text-secondary)] flex items-start gap-3 cursor-pointer group"
-                      >
-                        <span className="w-5 h-5 rounded bg-[var(--surface-secondary)] text-[var(--text-muted)] flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5 group-hover:bg-[var(--accent-primary)]/10 group-hover:text-[var(--accent-highlight)] transition-colors">{i + 1}</span>
+                      <li key={i} className="text-[14px] text-[var(--text-secondary)] flex items-start gap-4">
+                        <span className="text-[10px] font-bold mt-1 text-[var(--text-muted)]">0{i + 1}</span>
                         <span className="min-w-0">{task}</span>
-                      </motion.li>
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
             </motion.div>
           ) : (
-            <div className="py-12 flex flex-col items-center justify-center flex-1 text-center">
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-8 h-8 border-2 border-blue-600/30 border-t-blue-600 rounded-full mb-4" 
-              />
-              <p className="text-sm text-[var(--text-muted)] animate-pulse">Generating insights...</p>
+            <div className="py-12 flex flex-col items-start flex-1">
+              <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+                <p className="text-2xl font-light text-[var(--text-muted)] italic">Synthesizing insights...</p>
+              </motion.div>
             </div>
           )}
         </motion.div>
 
         {/* Today's Tasks */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm cursor-pointer">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-5 flex items-center gap-2">
-            <Zap className="w-4 h-4 text-[var(--accent-highlight)]" /> Today's Priorities
-          </h2>
+        <motion.div variants={fadeUp} className="lg:col-span-7 flex flex-col">
+          <h2 className="label-micro mb-8">Priority Queue</h2>
           {todayTasks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 bg-[var(--surface-secondary)]/30 border border-dashed border-[var(--border-color)] rounded-xl text-center">
-              <p className="text-[14px] font-medium text-[var(--text-primary)] mb-1">No tasks for today</p>
-              <p className="text-[13px] text-[var(--text-muted)]">Enjoy your free time! 🎉</p>
+            <div className="flex flex-col items-start justify-center py-12">
+              <p className="text-xl font-light text-[var(--text-muted)]">Inbox zero achieved.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {todayTasks.slice(0, 4).map(task => (
+            <div className="space-y-0">
+              {todayTasks.slice(0, 5).map(task => (
                 <motion.div 
                   key={task.id}
-                  whileHover={{ y: -2, backgroundColor: 'var(--surface-secondary)' }}
-                  className="flex flex-col gap-2 p-4 rounded-xl bg-[var(--background)] border border-[var(--border-color)] transition-all"
+                  whileHover={{ x: 8 }}
+                  className="flex flex-col gap-1 py-5 border-b divider-subtle group cursor-pointer"
                 >
-                  <div className="flex items-start justify-between">
-                    <p className="text-[14px] font-medium text-[var(--text-primary)] truncate pr-4">{task.title}</p>
-                    <motion.div 
-                      className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${task.priority_label === 'Critical' ? 'bg-red-500' : task.priority_label === 'High' ? 'bg-orange-500' : task.priority_label === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'}`} 
-                    />
-                  </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">{formatTimeRemaining(task.deadline)}</p>
-                    {task.priority_score && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--surface-secondary)] text-[var(--text-secondary)]">
-                        {task.priority_score}
-                      </span>
-                    )}
+                  <div className="flex items-center justify-between">
+                    <p className="text-[16px] font-medium text-[var(--text-primary)] group-hover:text-[var(--accent-highlight)] transition-colors">{task.title}</p>
+                    <span className="label-micro text-[var(--text-secondary)]">{formatTimeRemaining(task.deadline)}</span>
                   </div>
                 </motion.div>
               ))}
             </div>
           )}
         </motion.div>
+      </div>
 
-      {/* Charts Row */}
-      <motion.div variants={fadeUp} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Charts Row - Borderless */}
+      <motion.div variants={viewportChart} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
         {/* Weekly Productivity */}
-        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[15px] font-semibold text-[var(--text-primary)] tracking-tight mb-5 flex items-center gap-2">
-            <BarChart3 className="w-[18px] h-[18px] text-[var(--accent-secondary)] flex-shrink-0" /> Weekly Productivity
-          </h2>
-          <div className="w-full h-[200px]">
+        <motion.div className="lg:col-span-8 flex flex-col">
+          <h2 className="label-micro mb-8">Weekly Throughput</h2>
+          <div className="w-full h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyData}>
-                <XAxis dataKey="day" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ background: 'var(--surface-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)' }} />
-                <Bar dataKey="tasks_completed" fill="url(#barGradient)" radius={[4, 4, 0, 0]} animationDuration={1500} />
-                <defs>
-                  <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--accent-primary)" />
-                    <stop offset="100%" stopColor="var(--accent-highlight)" />
-                  </linearGradient>
-                </defs>
+                <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 11, fontWeight: 500 }} axisLine={false} tickLine={false} dy={10} />
+                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.02)' }} contentStyle={{ background: 'var(--background)', border: '1px solid var(--border-color)', borderRadius: '0', color: 'var(--text-primary)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }} />
+                <Bar dataKey="tasks_completed" fill="var(--text-primary)" radius={[2, 2, 0, 0]} animationDuration={1500} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
 
         {/* Upcoming Deadlines */}
-        <motion.div variants={cardVariants} whileHover="hover" className="lg:col-span-8 bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-5 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[var(--warning)]" /> Upcoming Deadlines
-          </h2>
+        <motion.div className="lg:col-span-4 flex flex-col">
+          <h2 className="label-micro mb-8">Upcoming Deadlines</h2>
           {upcomingDeadlines.length === 0 ? (
-            <div className="flex flex-col items-center justify-center flex-1">
-              <p className="text-[var(--text-muted)] text-sm">No upcoming deadlines 🎯</p>
+            <div className="flex flex-col items-start py-8">
+              <p className="text-xl font-light text-[var(--text-muted)]">Clear.</p>
             </div>
           ) : (
-            <div className="space-y-2 flex-1 flex flex-col justify-center">
-              {upcomingDeadlines.slice(0, 4).map(task => (
-                <motion.div 
-                  key={task.id} 
-                  whileHover={{ x: 4, backgroundColor: 'var(--surface-secondary)' }}
-                  className="flex items-center justify-between gap-4 py-2 border-b border-[var(--border-color)] last:border-0"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[14px] font-medium text-[var(--text-primary)] truncate">{task.title}</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <p className="text-[12px] text-[var(--text-muted)] hidden sm:block">{formatDate(task.deadline)}</p>
-                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded flex-shrink-0 whitespace-nowrap ${
-                      formatTimeRemaining(task.deadline) === 'Overdue' ? 'bg-red-500/10 text-[var(--danger)] border border-red-500/20' : 'bg-orange-500/10 text-[var(--warning)] border border-orange-500/20'
-                    }`}>
-                      {formatTimeRemaining(task.deadline)}
-                    </span>
-                  </div>
-                </motion.div>
+            <div className="flex flex-col">
+              {upcomingDeadlines.slice(0, 5).map(task => (
+                <div key={task.id} className="py-4 border-b divider-subtle last:border-0 flex items-baseline justify-between gap-4">
+                  <p className="text-[14px] font-medium text-[var(--text-primary)] truncate">{task.title}</p>
+                  <span className="label-micro text-right text-[var(--text-secondary)] whitespace-nowrap">
+                    {formatDate(task.deadline)}
+                  </span>
+                </div>
               ))}
             </div>
           )}
         </motion.div>
       </motion.div>
 
-      {/* Goal Progress - Redesigned Asymmetrically */}
+      {/* Goal Progress */}
       {analytics?.goal_progress?.length > 0 && (
-        <motion.div variants={cardVariants} whileHover="hover" className="bg-[var(--surface)] border border-[var(--border-color)] rounded-xl p-6 shadow-sm">
-          <h2 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-6 flex items-center gap-2">
-            <span className="text-emerald-500">🎯</span> Active Goals
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            {/* Featured Goal (Largest) */}
+        <motion.div variants={fadeUp} className="border-t divider-subtle pt-12 pb-24">
+          <h2 className="label-micro mb-8">Active Objectives</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Featured Goal */}
             {analytics.goal_progress[0] && (
-              <div className="md:col-span-7 bg-[var(--surface-secondary)] border border-[var(--border-color)] rounded-xl p-6 relative overflow-hidden group">
-                <div className="absolute right-0 bottom-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mb-10 pointer-events-none group-hover:bg-emerald-500/10 transition-colors" />
-                <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-2">Primary Focus</p>
-                <p className="text-xl font-semibold text-[var(--text-primary)] mb-4">{analytics.goal_progress[0].title}</p>
-                <div className="w-full h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
+              <div className="lg:col-span-2 relative overflow-hidden group">
+                <p className="text-3xl font-light text-[var(--text-primary)] mb-6 tracking-tight">{analytics.goal_progress[0].title}</p>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-5xl font-light tracking-tighter text-[var(--text-primary)]">{analytics.goal_progress[0].progress}</span><span className="text-[var(--text-muted)]">%</span>
+                </div>
+                <div className="w-full h-[1px] bg-[var(--surface-secondary)] overflow-hidden mt-6">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${analytics.goal_progress[0].progress}%` }}
                     transition={{ duration: 1.5, ease: "easeOut" }}
-                    className="h-full bg-emerald-500 rounded-full" 
+                    className="h-full bg-[var(--text-primary)]" 
                   />
-                </div>
-                <div className="flex items-center justify-between mt-3 text-xs text-[var(--text-muted)] font-medium">
-                  <span>{analytics.goal_progress[0].progress}% Complete</span>
-                  <span>{analytics.goal_progress[0].milestones_completed}/{analytics.goal_progress[0].milestones_total} milestones</span>
                 </div>
               </div>
             )}
             
-            {/* Secondary Goals (Stacked) */}
+            {/* Secondary Goals */}
             {analytics.goal_progress.length > 1 && (
-              <div className="md:col-span-5 flex flex-col gap-4 justify-center">
+              <div className="flex flex-col justify-center">
                 {analytics.goal_progress.slice(1, 4).map(goal => (
-                  <div key={goal.id} className="group cursor-pointer">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-[13px] font-medium text-[var(--text-primary)] truncate pr-4 group-hover:text-[var(--accent-highlight)] transition-colors">{goal.title}</p>
-                      <span className="text-[11px] font-bold text-[var(--text-muted)]">{goal.progress}%</span>
+                  <div key={goal.id} className="group cursor-pointer py-4 border-b divider-subtle last:border-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-[14px] font-medium text-[var(--text-primary)] truncate pr-4 group-hover:opacity-70 transition-opacity">{goal.title}</p>
+                      <span className="label-micro">{goal.progress}%</span>
                     </div>
-                    <div className="w-full h-1 bg-[var(--surface-secondary)] rounded-full overflow-hidden">
+                    <div className="w-full h-[1px] bg-[var(--surface-secondary)] overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${goal.progress}%` }}
                         transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-                        className="h-full bg-[var(--text-secondary)] rounded-full" 
+                        className="h-full bg-[var(--text-secondary)]" 
                       />
                     </div>
                   </div>
@@ -336,7 +284,6 @@ export default function Dashboard() {
             )}
           </div>
         </motion.div>
-      )}div>
       )}
     </motion.div>
   );
